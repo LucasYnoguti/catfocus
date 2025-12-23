@@ -7,20 +7,39 @@ import java.awt.*;
 
 
 public class MainFrame extends JFrame{
+    Integer[] focusOptions = {25, 15, 20, 30, 40, 50, 60};
+    Integer[] shortBreakOptions = {5, 7, 10, 15};
     private JLabel timeLabel;
     private JLabel phaseLabel;
     JButton playPauseBtn;
     JButton resetBtn;
     private PomodoroState state;
-    private final int totalSeconds =  5;
     private Timer swingTimer;
+    private JComboBox<Integer> focusDropdown;
+    private JComboBox<Integer> shortBreakDropdown;
+    private JLabel focusLabel;
+    private JLabel shortBreakLabel;
+
 
     public MainFrame() {
         setTitle("CatFocus");
-        setSize(300, 200);
+        setSize(400, 200);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        state = new PomodoroState(totalSeconds, false, PomodoroPhase.FOCUS);
 
+        focusDropdown = new JComboBox<>(focusOptions);
+        shortBreakDropdown = new JComboBox<>(shortBreakOptions);
+        focusLabel = new JLabel("Focus Duration:");
+        shortBreakLabel = new JLabel("Short Break Duration:");
+
+        JPanel settingsPanel = new JPanel();
+        settingsPanel.add(focusLabel);
+        settingsPanel.add(focusDropdown);
+        settingsPanel.add(shortBreakLabel);
+        settingsPanel.add(shortBreakDropdown);
+
+        add(settingsPanel, BorderLayout.NORTH);
+
+        state = new PomodoroState(25*60, false, PomodoroPhase.FOCUS, 25*60, 5*60, 15*60);
         phaseLabel = new JLabel(formatPhase(state.getPhase()), SwingConstants.CENTER);
         phaseLabel.setFont(new Font("Arial", Font.BOLD, 30));
 
@@ -36,23 +55,27 @@ public class MainFrame extends JFrame{
         buttons.add(playPauseBtn);
         buttons.add(resetBtn);
 
-        add(timeLabel, BorderLayout.CENTER);
+        JPanel timerStatePanel = new JPanel(new BorderLayout());
+        timerStatePanel.add(phaseLabel, BorderLayout.NORTH);
+        timerStatePanel.add(timeLabel, BorderLayout.CENTER);
+        add(timerStatePanel, BorderLayout.CENTER);
         add(buttons, BorderLayout.SOUTH);
-        add(phaseLabel, BorderLayout.NORTH);
+
+        focusDropdown.addActionListener(e -> updateSettings());
+        shortBreakDropdown.addActionListener(e -> updateSettings());
 
         swingTimer = new Timer(1000, e -> {
             state = state.tick();
-
-            timeLabel.setText(formatTime(state.getRemainingSeconds()));
-            phaseLabel.setText(formatPhase(state.getPhase()));
-            playPauseBtn.setText(state.isRunning() ? "Pause" : "Play");
+            updateUI();
         });
 
 
         playPauseBtn.addActionListener(e -> { playPause(); });
 
         resetBtn.addActionListener(e -> {
-            state = state.reset(totalSeconds);
+            int focusMinutes = (Integer) focusDropdown.getSelectedItem();
+            int shortBreakMinutes = (Integer) shortBreakDropdown.getSelectedItem();
+            state = state.reset(focusMinutes * 60, shortBreakMinutes * 60);
             swingTimer.stop();
             updateUI();
         });
@@ -70,6 +93,18 @@ public class MainFrame extends JFrame{
             default: return "FOCUS";
         }
     }
+
+    private void updateSettings() {
+        int focusSeconds = (Integer) focusDropdown.getSelectedItem() * 60;
+        int shortBreakSeconds = (Integer) shortBreakDropdown.getSelectedItem() * 60;
+
+        // Se o timer estiver parado, resetamos para o novo tempo de foco
+        if (!state.isRunning()) {
+            state = state.reset(focusSeconds, shortBreakSeconds);
+            updateUI();
+        }
+    }
+
     private void playPause() {
         if (state.isRunning()) {
             state = state.pause();
@@ -86,6 +121,4 @@ public class MainFrame extends JFrame{
         phaseLabel.setText(state.getPhase().toString());
         playPauseBtn.setText(state.isRunning() ? "Pause" : "Play");
     }
-
-
 }
