@@ -25,6 +25,7 @@ public class MainFrame extends JFrame {
     public MainFrame() {
         setTitle("CatFocus");
         setSize(400, 200);
+        setMinimumSize(new Dimension(400,200));
         setLayout(new GridBagLayout());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
