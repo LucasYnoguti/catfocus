@@ -32,10 +32,9 @@ public class PomodoroState {
 
     public PomodoroState tick() {
         if (!running) return this;
-        if(remainingSeconds>0){
+        if (remainingSeconds > 0) {
             return new PomodoroState(remainingSeconds - 1, true, phase, focusDuration, shortBreakDuration, longBreakDuration);
-        }
-        else{
+        } else {
             PomodoroPhase nextPhase = getNextPhase();
             int nextSeconds = getPhaseDuration(nextPhase);
             return new PomodoroState(nextSeconds, true, nextPhase, focusDuration, shortBreakDuration, longBreakDuration);
@@ -61,9 +60,12 @@ public class PomodoroState {
 
     private int getPhaseDuration(PomodoroPhase phase) {
         switch (phase) {
-            case FOCUS: return focusDuration;
-            case SHORT_BREAK: return shortBreakDuration;
-            default: return longBreakDuration;
+            case FOCUS:
+                return focusDuration;
+            case SHORT_BREAK:
+                return shortBreakDuration;
+            default:
+                return longBreakDuration;
         }
     }
 }

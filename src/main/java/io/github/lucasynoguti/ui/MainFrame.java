@@ -2,11 +2,12 @@ package io.github.lucasynoguti.ui;
 
 import io.github.lucasynoguti.core.pomodoro.PomodoroPhase;
 import io.github.lucasynoguti.core.pomodoro.PomodoroState;
+
 import javax.swing.*;
 import java.awt.*;
 
 
-public class MainFrame extends JFrame{
+public class MainFrame extends JFrame {
     Integer[] focusOptions = {25, 15, 20, 30, 40, 50, 60};
     Integer[] shortBreakOptions = {5, 7, 10, 15};
     private JLabel timeLabel;
@@ -24,6 +25,7 @@ public class MainFrame extends JFrame{
     public MainFrame() {
         setTitle("CatFocus");
         setSize(400, 200);
+        setLayout(new GridBagLayout());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         focusDropdown = new JComboBox<>(focusOptions);
@@ -37,18 +39,16 @@ public class MainFrame extends JFrame{
         settingsPanel.add(shortBreakLabel);
         settingsPanel.add(shortBreakDropdown);
 
-        add(settingsPanel, BorderLayout.NORTH);
-
-        state = new PomodoroState(25*60, false, PomodoroPhase.FOCUS, 25*60, 5*60, 15*60);
+        //initial state
+        state = new PomodoroState(25 * 60, false, PomodoroPhase.FOCUS, 25 * 60, 5 * 60, 15 * 60);
         phaseLabel = new JLabel(formatPhase(state.getPhase()), SwingConstants.CENTER);
-        phaseLabel.setFont(new Font("Arial", Font.BOLD, 30));
+        phaseLabel.setFont(new Font("Arial", Font.BOLD, 40));
 
         timeLabel = new JLabel(formatTime(state.getRemainingSeconds()), SwingConstants.CENTER);
         timeLabel.setFont(new Font("Arial", Font.BOLD, 40));
 
         playPauseBtn = new JButton("Play");
         resetBtn = new JButton("Reset");
-
 
 
         JPanel buttons = new JPanel();
@@ -58,8 +58,14 @@ public class MainFrame extends JFrame{
         JPanel timerStatePanel = new JPanel(new BorderLayout());
         timerStatePanel.add(phaseLabel, BorderLayout.NORTH);
         timerStatePanel.add(timeLabel, BorderLayout.CENTER);
-        add(timerStatePanel, BorderLayout.CENTER);
-        add(buttons, BorderLayout.SOUTH);
+
+        JPanel centralPanel = new JPanel(new BorderLayout());
+        centralPanel.add(settingsPanel, BorderLayout.NORTH);
+        centralPanel.add(timerStatePanel, BorderLayout.CENTER);
+        centralPanel.add(buttons, BorderLayout.SOUTH);
+        centralPanel.setPreferredSize(new Dimension(400, 200));
+        centralPanel.setMaximumSize(new Dimension(400, 200));
+        add(centralPanel);
 
         focusDropdown.addActionListener(e -> updateSettings());
         shortBreakDropdown.addActionListener(e -> updateSettings());
@@ -70,7 +76,9 @@ public class MainFrame extends JFrame{
         });
 
 
-        playPauseBtn.addActionListener(e -> { playPause(); });
+        playPauseBtn.addActionListener(e -> {
+            playPause();
+        });
 
         resetBtn.addActionListener(e -> {
             int focusMinutes = (Integer) focusDropdown.getSelectedItem();
@@ -80,6 +88,7 @@ public class MainFrame extends JFrame{
             updateUI();
         });
     }
+
     private String formatTime(int totalSeconds) {
         int min = totalSeconds / 60;
         int sec = totalSeconds % 60;
@@ -88,9 +97,12 @@ public class MainFrame extends JFrame{
 
     private String formatPhase(PomodoroPhase phase) {
         switch (phase) {
-            case FOCUS: return "FOCUS";
-            case SHORT_BREAK: return "SHORT BREAK";
-            default: return "FOCUS";
+            case FOCUS:
+                return "FOCUS";
+            case SHORT_BREAK:
+                return "SHORT BREAK";
+            default:
+                return "FOCUS";
         }
     }
 
