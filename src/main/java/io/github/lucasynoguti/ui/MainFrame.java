@@ -33,10 +33,10 @@ public class MainFrame extends JFrame {
         settings = new PomodoroSettings(25 * 60, 5 * 60, 15 * 60, 2);
         state = new PomodoroState(settings.focusDuration(), false, PomodoroPhase.FOCUS, 0, settings);
         phaseLabel = new JLabel(formatPhase(state.getPhase()), SwingConstants.CENTER);
-        phaseLabel.setFont(new Font("SansSerif", Font.BOLD, 40));
+        phaseLabel.setFont(AppTheme.MAIN_FONT.deriveFont(Font.PLAIN, 40f));
         phaseLabel.setForeground(AppTheme.FOCUS_COLOR);
         timeLabel = new JLabel(formatTime(state.getRemainingSeconds()), SwingConstants.CENTER);
-        timeLabel.setFont(new Font("SansSerif", Font.BOLD, 40));
+        timeLabel.setFont(AppTheme.MAIN_FONT.deriveFont(Font.PLAIN, 40f));
         timeLabel.setForeground(AppTheme.FOCUS_COLOR);
 
         playPauseBtn = new AppButton("▶");
@@ -145,8 +145,9 @@ public class MainFrame extends JFrame {
 
     private void updateFontSizes() {
         int h = getHeight();
-        timeLabel.setFont(new Font("SansSerif", Font.BOLD, h / 5));
-        phaseLabel.setFont(new Font("SansSerif", Font.BOLD, h / 5));
+        Font labelFont = AppTheme.MAIN_FONT.deriveFont(Font.PLAIN, (float) h / 5);
+        timeLabel.setFont(labelFont);
+        phaseLabel.setFont(labelFont);
         Font buttonFont = new Font("SansSerif", Font.BOLD, (int)(h /12));
         playPauseBtn.setFont(buttonFont);
         resetBtn.setFont(buttonFont);
