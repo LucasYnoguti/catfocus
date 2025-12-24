@@ -18,6 +18,7 @@ public class MainFrame extends JFrame {
     private Timer swingTimer;
     private int currentFocusMin = 25;
     private int currentShortBreakMin = 5;
+    private int currentLongBreakMin = 15;
 
 
     public MainFrame() {
@@ -28,16 +29,16 @@ public class MainFrame extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         //initial state
-        state = new PomodoroState(25 * 60, false, PomodoroPhase.FOCUS, 25 * 60, 5 * 60, 15 * 60);
+        state = new PomodoroState(1, false, PomodoroPhase.FOCUS, 1, 1, 1, 0);
         phaseLabel = new JLabel(formatPhase(state.getPhase()), SwingConstants.CENTER);
-        phaseLabel.setFont(new Font("Arial", Font.BOLD, 40));
+        phaseLabel.setFont(new Font("SansSerif", Font.BOLD, 40));
 
         timeLabel = new JLabel(formatTime(state.getRemainingSeconds()), SwingConstants.CENTER);
-        timeLabel.setFont(new Font("Arial", Font.BOLD, 40));
+        timeLabel.setFont(new Font("SansSerif", Font.BOLD, 40));
 
-        playPauseBtn = new JButton("Play");
-        resetBtn = new JButton("Reset");
-        settingsBtn = new JButton("⚙");
+        playPauseBtn = new AppButton("Play");
+        resetBtn = new AppButton("Reset");
+        settingsBtn = new AppButton("⚙");
 
         JPanel buttons = new JPanel();
         buttons.add(playPauseBtn);
@@ -67,17 +68,18 @@ public class MainFrame extends JFrame {
         });
 
         resetBtn.addActionListener(e -> {
-            state = state.reset(currentFocusMin * 60, currentShortBreakMin * 60);
+            state = state.reset(currentFocusMin * 60, currentShortBreakMin * 60, currentLongBreakMin * 60);
             swingTimer.stop();
             updateUI();
         });
 
         settingsBtn.addActionListener(e -> {
-            SettingsDialog dialog = new SettingsDialog(this, currentFocusMin, currentShortBreakMin);
+            SettingsDialog dialog = new SettingsDialog(this, currentFocusMin, currentShortBreakMin, currentLongBreakMin);
             dialog.setVisible(true);
             if (dialog.isConfirmed()) {
                 currentFocusMin = dialog.getFocusMinutes();
                 currentShortBreakMin = dialog.getShortBreakMinutes();
+                currentLongBreakMin = dialog.getLongBreakMinutes();
                 updateSettings();
             }
         });
@@ -104,7 +106,7 @@ public class MainFrame extends JFrame {
 
     private void updateSettings() {
         if (!state.isRunning()) {
-            state = state.reset(currentFocusMin * 60, currentShortBreakMin * 60);
+            state = state.reset(currentFocusMin * 60, currentShortBreakMin * 60, currentLongBreakMin * 60);
             updateUI();
         }
     }

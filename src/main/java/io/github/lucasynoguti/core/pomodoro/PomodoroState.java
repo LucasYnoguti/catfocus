@@ -9,8 +9,10 @@ public class PomodoroState {
     private final int focusDuration;      //seconds
     private final int shortBreakDuration;
     private final int longBreakDuration;
+    private final int completedFocusSessions;
 
-    public PomodoroState(int remainingSeconds, boolean running, PomodoroPhase phase, int focusDuration, int shortBreakDuration, int longBreakDuration) {
+    public PomodoroState(int remainingSeconds, boolean running, PomodoroPhase phase,
+                         int focusDuration, int shortBreakDuration, int longBreakDuration, int completedFocusSessions) {
 
         this.remainingSeconds = remainingSeconds;
         this.running = running;
@@ -18,6 +20,7 @@ public class PomodoroState {
         this.focusDuration = focusDuration;
         this.shortBreakDuration = shortBreakDuration;
         this.longBreakDuration = longBreakDuration;
+        this.completedFocusSessions = completedFocusSessions;
     }
 
     public int getRemainingSeconds() {
@@ -35,38 +38,39 @@ public class PomodoroState {
     public PomodoroState tick() {
         if (!running) return this;
         if (remainingSeconds > 0) {
-            return new PomodoroState(remainingSeconds - 1, true, phase, focusDuration, shortBreakDuration, longBreakDuration);
+            return new PomodoroState(remainingSeconds - 1, true, phase,
+                    focusDuration, shortBreakDuration, longBreakDuration, completedFocusSessions);
         } else {
-            PomodoroPhase nextPhase = getNextPhase();
-            int nextSeconds = getPhaseDuration(nextPhase);
-            return new PomodoroState(nextSeconds, true, nextPhase, focusDuration, shortBreakDuration, longBreakDuration);
+            if (phase == PomodoroPhase.FOCUS) {
+                int newCount = completedFocusSessions + 1;
+                if (newCount > 2) { // 2 ciclos de foco atingidos
+                    return new PomodoroState(longBreakDuration, false, PomodoroPhase.LONG_BREAK,
+                            focusDuration, shortBreakDuration, longBreakDuration, 0);
+                } else {
+                    return new PomodoroState(shortBreakDuration, false, PomodoroPhase.SHORT_BREAK,
+                            focusDuration, shortBreakDuration, longBreakDuration, newCount);
+                }
+            } else {
+                return new PomodoroState(focusDuration, false, PomodoroPhase.FOCUS,
+                        focusDuration, shortBreakDuration, longBreakDuration, completedFocusSessions);
+            }
         }
 
     }
 
     public PomodoroState start() {
-        return new PomodoroState(remainingSeconds, true, phase, focusDuration, shortBreakDuration, longBreakDuration);
+        return new PomodoroState(remainingSeconds, true, phase, focusDuration,
+                shortBreakDuration, longBreakDuration, completedFocusSessions);
     }
 
     public PomodoroState pause() {
-        return new PomodoroState(remainingSeconds, false, phase, focusDuration, shortBreakDuration, longBreakDuration);
+        return new PomodoroState(remainingSeconds, false, phase, focusDuration,
+                shortBreakDuration, longBreakDuration, completedFocusSessions);
     }
 
-    public PomodoroState reset(int focusDuration, int shortBreakDuration) {
-        return new PomodoroState(focusDuration, false, phase, focusDuration, shortBreakDuration, longBreakDuration);
-    }
-
-    private PomodoroPhase getNextPhase() {
-        switch (phase) {
-            case FOCUS:
-                return PomodoroPhase.SHORT_BREAK;
-            case SHORT_BREAK:
-                return PomodoroPhase.FOCUS;
-            case LONG_BREAK:
-                return PomodoroPhase.FOCUS;
-            default:
-                return PomodoroPhase.FOCUS;
-        }
+    public PomodoroState reset(int focusDuration, int shortBreakDuration, int longBreakDuration) {
+        return new PomodoroState(focusDuration, false, phase, focusDuration,
+                shortBreakDuration, longBreakDuration, completedFocusSessions);
     }
 
     private int getPhaseDuration(PomodoroPhase phase) {
