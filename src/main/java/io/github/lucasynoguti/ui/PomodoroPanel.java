@@ -32,6 +32,7 @@ public class PomodoroPanel extends JPanel {
         buttons.add(playPauseBtn);
         buttons.add(resetBtn);
         buttons.add(settingsBtn);
+        buttons.setOpaque(false);
 
         add(timerPanel, BorderLayout.CENTER);
         add(buttons, BorderLayout.SOUTH);

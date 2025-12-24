@@ -19,6 +19,7 @@ public class MainFrame extends JFrame {
         setSize(500, 300);
         setMinimumSize(new Dimension(300, 200));
         setLayout(new GridBagLayout());
+        getContentPane().setBackground(AppTheme.BG_COLOR);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         //model
