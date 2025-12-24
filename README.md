@@ -8,10 +8,10 @@
 
 ## Implemented Features
 
-- **Pomodoro Timer** with automatic phase switching between focus and break  
-- **Play/Pause** and **Reset** buttons  
-- Displays remaining time and current phase (`FOCUS` / `SHORT_BREAK`)  
-- Logic separated from the interface using **Functional Core / Imperative Shell**  
+- **Pomodoro Timer** with automatic phase switching between focus and break
+- **Play/Pause** and **Reset** buttons
+- **Customizable durations** for focus, short breaks, and long breaks via a Settings Dialog
+- Displays remaining time and current phase (`FOCUS` / `SHORT BREAK` / `LONG BREAK`)
 
 ---
 
@@ -27,11 +27,16 @@
 ## Project Structure
 ```
 core/
-└─ pomodoro/ ← PomodoroState and PomodoroPhase
+    └─ pomodoro/
+       ├─ PomodoroPhase.java
+       ├─ PomodoroSettings.java
+       └─ PomodoroState.java
 
-ui/
-├─ MainFrame.java ← Graphical interface
-└─ Main.java ← Entry point
+    ui/
+    ├─ AppButton.java
+    ├─ Main.java
+    ├─ MainFrame.java
+    └─ SettingsDialog.java
 ```
 ---
 
