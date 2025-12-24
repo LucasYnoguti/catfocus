@@ -1,5 +1,7 @@
 package io.github.lucasynoguti.core.pomodoro;
 
+import java.lang.classfile.instruction.ReturnInstruction;
+
 public class PomodoroState {
     private final int remainingSeconds;
     private final boolean running;
@@ -55,7 +57,16 @@ public class PomodoroState {
     }
 
     private PomodoroPhase getNextPhase() {
-        return phase == PomodoroPhase.FOCUS ? PomodoroPhase.SHORT_BREAK : PomodoroPhase.FOCUS;
+        switch (phase) {
+            case FOCUS:
+                return PomodoroPhase.SHORT_BREAK;
+            case SHORT_BREAK:
+                return PomodoroPhase.FOCUS;
+            case LONG_BREAK:
+                return PomodoroPhase.FOCUS;
+            default:
+                return PomodoroPhase.FOCUS;
+        }
     }
 
     private int getPhaseDuration(PomodoroPhase phase) {
@@ -64,8 +75,10 @@ public class PomodoroState {
                 return focusDuration;
             case SHORT_BREAK:
                 return shortBreakDuration;
-            default:
+            case LONG_BREAK:
                 return longBreakDuration;
+            default:
+                return focusDuration;
         }
     }
 }

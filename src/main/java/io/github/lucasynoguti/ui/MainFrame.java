@@ -8,18 +8,16 @@ import java.awt.*;
 
 
 public class MainFrame extends JFrame {
-    Integer[] focusOptions = {25, 15, 20, 30, 40, 50, 60};
-    Integer[] shortBreakOptions = {5, 7, 10, 15};
+
     private JLabel timeLabel;
     private JLabel phaseLabel;
-    JButton playPauseBtn;
-    JButton resetBtn;
+    private JButton playPauseBtn;
+    private JButton resetBtn;
+    private JButton settingsBtn;
     private PomodoroState state;
     private Timer swingTimer;
-    private JComboBox<Integer> focusDropdown;
-    private JComboBox<Integer> shortBreakDropdown;
-    private JLabel focusLabel;
-    private JLabel shortBreakLabel;
+    private int currentFocusMin = 25;
+    private int currentShortBreakMin = 5;
 
 
     public MainFrame() {
@@ -28,17 +26,6 @@ public class MainFrame extends JFrame {
         setMinimumSize(new Dimension(400,200));
         setLayout(new GridBagLayout());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-
-        focusDropdown = new JComboBox<>(focusOptions);
-        shortBreakDropdown = new JComboBox<>(shortBreakOptions);
-        focusLabel = new JLabel("Focus Duration:");
-        shortBreakLabel = new JLabel("Short Break Duration:");
-
-        JPanel settingsPanel = new JPanel();
-        settingsPanel.add(focusLabel);
-        settingsPanel.add(focusDropdown);
-        settingsPanel.add(shortBreakLabel);
-        settingsPanel.add(shortBreakDropdown);
 
         //initial state
         state = new PomodoroState(25 * 60, false, PomodoroPhase.FOCUS, 25 * 60, 5 * 60, 15 * 60);
@@ -50,26 +37,24 @@ public class MainFrame extends JFrame {
 
         playPauseBtn = new JButton("Play");
         resetBtn = new JButton("Reset");
-
+        settingsBtn = new JButton("⚙");
 
         JPanel buttons = new JPanel();
         buttons.add(playPauseBtn);
         buttons.add(resetBtn);
+        buttons.add(settingsBtn);
 
         JPanel timerStatePanel = new JPanel(new BorderLayout());
         timerStatePanel.add(phaseLabel, BorderLayout.NORTH);
         timerStatePanel.add(timeLabel, BorderLayout.CENTER);
 
         JPanel centralPanel = new JPanel(new BorderLayout());
-        centralPanel.add(settingsPanel, BorderLayout.NORTH);
         centralPanel.add(timerStatePanel, BorderLayout.CENTER);
         centralPanel.add(buttons, BorderLayout.SOUTH);
         centralPanel.setPreferredSize(new Dimension(400, 200));
         centralPanel.setMaximumSize(new Dimension(400, 200));
         add(centralPanel);
 
-        focusDropdown.addActionListener(e -> updateSettings());
-        shortBreakDropdown.addActionListener(e -> updateSettings());
 
         swingTimer = new Timer(1000, e -> {
             state = state.tick();
@@ -82,11 +67,19 @@ public class MainFrame extends JFrame {
         });
 
         resetBtn.addActionListener(e -> {
-            int focusMinutes = (Integer) focusDropdown.getSelectedItem();
-            int shortBreakMinutes = (Integer) shortBreakDropdown.getSelectedItem();
-            state = state.reset(focusMinutes * 60, shortBreakMinutes * 60);
+            state = state.reset(currentFocusMin * 60, currentShortBreakMin * 60);
             swingTimer.stop();
             updateUI();
+        });
+
+        settingsBtn.addActionListener(e -> {
+            SettingsDialog dialog = new SettingsDialog(this, currentFocusMin, currentShortBreakMin);
+            dialog.setVisible(true);
+            if (dialog.isConfirmed()) {
+                currentFocusMin = dialog.getFocusMinutes();
+                currentShortBreakMin = dialog.getShortBreakMinutes();
+                updateSettings();
+            }
         });
     }
 
@@ -102,18 +95,16 @@ public class MainFrame extends JFrame {
                 return "FOCUS";
             case SHORT_BREAK:
                 return "SHORT BREAK";
+            case LONG_BREAK:
+                return "LONG BREAK";
             default:
                 return "FOCUS";
         }
     }
 
     private void updateSettings() {
-        int focusSeconds = (Integer) focusDropdown.getSelectedItem() * 60;
-        int shortBreakSeconds = (Integer) shortBreakDropdown.getSelectedItem() * 60;
-
-        // Se o timer estiver parado, resetamos para o novo tempo de foco
         if (!state.isRunning()) {
-            state = state.reset(focusSeconds, shortBreakSeconds);
+            state = state.reset(currentFocusMin * 60, currentShortBreakMin * 60);
             updateUI();
         }
     }
@@ -131,7 +122,7 @@ public class MainFrame extends JFrame {
 
     private void updateUI() {
         timeLabel.setText(formatTime(state.getRemainingSeconds()));
-        phaseLabel.setText(state.getPhase().toString());
+        phaseLabel.setText(formatPhase(state.getPhase()));
         playPauseBtn.setText(state.isRunning() ? "Pause" : "Play");
     }
 }
