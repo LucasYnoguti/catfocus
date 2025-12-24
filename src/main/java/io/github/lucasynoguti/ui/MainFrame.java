@@ -11,11 +11,8 @@ import java.awt.event.ComponentEvent;
 
 
 public class MainFrame extends JFrame {
-    private PomodoroPanel pomodoroPanel;
-    private PomodoroState state;
-    private Timer swingTimer;
-    private PomodoroSettings settings;
-
+    private final PomodoroPanel pomodoroPanel;
+    private final PomodoroController controller;
 
     public MainFrame() {
         setTitle("CatFocus");
@@ -25,21 +22,16 @@ public class MainFrame extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         //model
-        settings = new PomodoroSettings(25 * 60, 5 * 60, 15 * 60, 2);
-        state = new PomodoroState(settings.focusDuration(), false, PomodoroPhase.FOCUS, 0, settings);
+        final PomodoroSettings settings = new PomodoroSettings(25 * 60, 5 * 60, 15 * 60, 2);
+        controller = new PomodoroController(settings, this::updateView);
 
         //view
         pomodoroPanel = new PomodoroPanel();
         add(pomodoroPanel);
 
-        swingTimer = new Timer(1000, e -> {
-            state = state.tick();
-            updateView();
-        });
-
         //actions
-        pomodoroPanel.getPlayPauseBtn().addActionListener(e -> playPause());
-        pomodoroPanel.getResetBtn().addActionListener(e -> reset());
+        pomodoroPanel.getPlayPauseBtn().addActionListener(e -> controller.playPause());
+        pomodoroPanel.getResetBtn().addActionListener(e -> controller.reset());
         pomodoroPanel.getSettingsBtn().addActionListener(e -> openSettings());
 
         addComponentListener(new ComponentAdapter() {
@@ -48,45 +40,34 @@ public class MainFrame extends JFrame {
                 pomodoroPanel.updateFontSizes(getHeight());
             }
         });
-    }
 
-    // Controller logic
-    private void playPause() {
-        if (state.isRunning()) {
-            state = state.pause();
-            swingTimer.stop();
-        } else {
-            state = state.start();
-            swingTimer.start();
-        }
-        updateView();
-    }
-
-    private void reset() {
-        state = state.reset(settings);
-        swingTimer.stop();
         updateView();
     }
 
     private void openSettings() {
-        SettingsDialog dialog = new SettingsDialog(this, settings);
+        SettingsDialog dialog = new SettingsDialog(this, controller.getSettings());
         dialog.setVisible(true);
 
         if (dialog.isConfirmed()) {
-            settings = new PomodoroSettings(
+            PomodoroSettings newSettings = new PomodoroSettings(
                     dialog.getFocusMinutes() * 60,
                     dialog.getShortBreakMinutes() * 60,
                     dialog.getLongBreakMinutes() * 60,
                     dialog.getNumberOfSessions()
             );
-            if (!state.isRunning()) {
-                state = state.reset(settings);
-                updateView();
-            }
+            controller.updateSettings(newSettings);
+            updateView();
         }
     }
 
-    //View update
+    private void updateView() {
+        PomodoroState state = controller.getState();
+        pomodoroPanel.updateTime(formatTime(state.getRemainingSeconds()));
+        pomodoroPanel.updatePhase(formatPhase(state.getPhase()));
+        pomodoroPanel.updatePlayPause(state.isRunning());
+    }
+
+    //helpers
     private String formatTime(int totalSeconds) {
         int min = totalSeconds / 60;
         int sec = totalSeconds % 60;
@@ -99,12 +80,5 @@ public class MainFrame extends JFrame {
             case SHORT_BREAK -> "SHORT BREAK";
             case LONG_BREAK -> "LONG BREAK";
         };
-    }
-
-
-    private void updateView() {
-        pomodoroPanel.updateTime(formatTime(state.getRemainingSeconds()));
-        pomodoroPanel.updatePhase(formatPhase(state.getPhase()));
-        pomodoroPanel.updatePlayPause(state.isRunning());
     }
 }

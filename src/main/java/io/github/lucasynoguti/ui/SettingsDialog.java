@@ -36,7 +36,7 @@ public class SettingsDialog extends JDialog {
         longBreakDropdown.setSelectedItem(settings.longBreakDuration() / 60);
 
         numberOfSessionsDropdown = new JComboBox<>(numberOfSessionsOptions);
-        numberOfSessionsDropdown.setSelectedItem(settings.numberOfSessions() / 60);
+        numberOfSessionsDropdown.setSelectedItem(settings.numberOfSessions());
 
         //LINE 0
         addSettingRow("Focus Duration (min):", focusDropdown, 0, gbc);
