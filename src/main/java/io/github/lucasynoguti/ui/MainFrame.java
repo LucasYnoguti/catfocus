@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 
 
+
 public class MainFrame extends JFrame {
 
     private JLabel timeLabel;
@@ -32,9 +33,10 @@ public class MainFrame extends JFrame {
         state = new PomodoroState(settings.focusDuration(), false, PomodoroPhase.FOCUS, 0, settings);
         phaseLabel = new JLabel(formatPhase(state.getPhase()), SwingConstants.CENTER);
         phaseLabel.setFont(new Font("SansSerif", Font.BOLD, 40));
-
+        phaseLabel.setForeground(AppTheme.FOCUS_COLOR);
         timeLabel = new JLabel(formatTime(state.getRemainingSeconds()), SwingConstants.CENTER);
         timeLabel.setFont(new Font("SansSerif", Font.BOLD, 40));
+        timeLabel.setForeground(AppTheme.FOCUS_COLOR);
 
         playPauseBtn = new AppButton("▶");
         resetBtn = new AppButton("Reset");
@@ -54,6 +56,9 @@ public class MainFrame extends JFrame {
         centralPanel.add(buttons, BorderLayout.SOUTH);
         centralPanel.setPreferredSize(new Dimension(400, 200));
         centralPanel.setMaximumSize(new Dimension(400, 200));
+
+        setBackground(AppTheme.BG_COLOR);
+        centralPanel.setBackground(AppTheme.BG_COLOR);
         add(centralPanel);
 
 

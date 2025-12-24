@@ -26,17 +26,19 @@
 
 ## Project Structure
 ```
-core/
-    └─ pomodoro/
-       ├─ PomodoroPhase.java
-       ├─ PomodoroSettings.java
-       └─ PomodoroState.java
-
-    ui/
-    ├─ AppButton.java
-    ├─ Main.java
-    ├─ MainFrame.java
-    └─ SettingsDialog.java
+io.github.lucasynoguti
+    ├─ Main.java (Entry Point)
+    ├─ core/ (Functional Core)
+    │  └─ pomodoro/
+    │    ├─ PomodoroPhase.java
+    │    ├─ PomodoroSettings.java
+    │    └─ PomodoroState.java
+    └─ ui/ (Imperative Shell)
+       ├─ AppTheme.java
+       ├─ AppButton.java
+       ├─ Main.java
+       ├─ MainFrame.java
+       └─ SettingsDialog.java
 ```
 ---
 

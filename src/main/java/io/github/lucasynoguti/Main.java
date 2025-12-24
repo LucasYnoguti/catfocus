@@ -1,8 +1,10 @@
-package io.github.lucasynoguti.ui;
+package io.github.lucasynoguti;
 
 import javax.swing.*;
 
 import com.formdev.flatlaf.FlatLightLaf;
+import io.github.lucasynoguti.ui.AppTheme;
+import io.github.lucasynoguti.ui.MainFrame;
 
 public class Main {
     public static void main(String[] args) {
@@ -11,6 +13,10 @@ public class Main {
         } catch (Exception ex) {
             System.err.println("Failed to initialize LaF");
         }
+        UIManager.put("ComboBox.selectionBackground", AppTheme.PRIMARY_COLOR);
+        UIManager.put("List.selectionBackground", AppTheme.PRIMARY_COLOR);
+        UIManager.put("Component.focusColor", AppTheme.PRIMARY_COLOR);
+
         SwingUtilities.invokeLater(() -> new MainFrame().setVisible(true));
     }
 }
