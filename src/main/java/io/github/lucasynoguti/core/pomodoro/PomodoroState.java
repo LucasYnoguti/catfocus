@@ -66,6 +66,7 @@ public class PomodoroState {
                 .withSettings(settings);
     }
 
+    // GETTERS
     private int getPhaseDuration(PomodoroPhase phase) {
         switch (phase) {
             case FOCUS:

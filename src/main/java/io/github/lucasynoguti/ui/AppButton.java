@@ -6,7 +6,6 @@ import java.awt.*;
 public class AppButton extends JButton {
     public AppButton(String text) {
         super(text);
-        setFont(new Font("SansSerif", Font.BOLD, 20));
         setFocusPainted(false);
         setBackground(AppTheme.PRIMARY_COLOR);
         setForeground(Color.WHITE);

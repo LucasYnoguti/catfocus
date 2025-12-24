@@ -65,8 +65,11 @@ public class SettingsDialog extends JDialog {
     private void addSettingRow(String labelText, JComponent component, int row, GridBagConstraints gbc) {
         gbc.gridy = row;
         gbc.gridx = 0;
-        add(new JLabel(labelText), gbc);
+        JLabel label = new JLabel(labelText);
+        label.setFont(new Font("SansSerif",Font.PLAIN, 12));
+        add(label, gbc);
         gbc.gridx = 1;
+        component.setFont(new Font("SansSerif",Font.PLAIN, 12));
         add(component, gbc);
     }
 

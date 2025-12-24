@@ -6,7 +6,8 @@ import io.github.lucasynoguti.core.pomodoro.PomodoroState;
 
 import javax.swing.*;
 import java.awt.*;
-
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 
 public class MainFrame extends JFrame {
@@ -23,7 +24,7 @@ public class MainFrame extends JFrame {
 
     public MainFrame() {
         setTitle("CatFocus");
-        setSize(400, 200);
+        setSize(500, 300);
         setMinimumSize(new Dimension(400, 200));
         setLayout(new GridBagLayout());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -42,24 +43,30 @@ public class MainFrame extends JFrame {
         resetBtn = new AppButton("Reset");
         settingsBtn = new AppButton("⚙");
 
+
         JPanel buttons = new JPanel();
         buttons.add(playPauseBtn);
         buttons.add(resetBtn);
         buttons.add(settingsBtn);
 
         JPanel timerStatePanel = new JPanel(new BorderLayout());
+        timerStatePanel.setOpaque(false); //show background color
         timerStatePanel.add(phaseLabel, BorderLayout.NORTH);
         timerStatePanel.add(timeLabel, BorderLayout.CENTER);
 
         JPanel centralPanel = new JPanel(new BorderLayout());
+        centralPanel.setOpaque(false);
         centralPanel.add(timerStatePanel, BorderLayout.CENTER);
         centralPanel.add(buttons, BorderLayout.SOUTH);
-        centralPanel.setPreferredSize(new Dimension(400, 200));
-        centralPanel.setMaximumSize(new Dimension(400, 200));
-
         setBackground(AppTheme.BG_COLOR);
-        centralPanel.setBackground(AppTheme.BG_COLOR);
         add(centralPanel);
+
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                updateFontSizes();
+            }
+        });
 
 
         swingTimer = new Timer(1000, e -> {
@@ -134,5 +141,15 @@ public class MainFrame extends JFrame {
         timeLabel.setText(formatTime(state.getRemainingSeconds()));
         phaseLabel.setText(formatPhase(state.getPhase()));
         playPauseBtn.setText(state.isRunning() ? "⏸" : "▶");
+    }
+
+    private void updateFontSizes() {
+        int h = getHeight();
+        timeLabel.setFont(new Font("SansSerif", Font.BOLD, h / 5));
+        phaseLabel.setFont(new Font("SansSerif", Font.BOLD, h / 5));
+        Font buttonFont = new Font("SansSerif", Font.BOLD, (int)(h /12));
+        playPauseBtn.setFont(buttonFont);
+        resetBtn.setFont(buttonFont);
+        settingsBtn.setFont(buttonFont);
     }
 }
