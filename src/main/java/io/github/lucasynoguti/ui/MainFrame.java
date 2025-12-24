@@ -1,6 +1,7 @@
 package io.github.lucasynoguti.ui;
 
 import io.github.lucasynoguti.core.pomodoro.PomodoroPhase;
+import io.github.lucasynoguti.core.pomodoro.PomodoroSettings;
 import io.github.lucasynoguti.core.pomodoro.PomodoroState;
 
 import javax.swing.*;
@@ -16,22 +17,19 @@ public class MainFrame extends JFrame {
     private JButton settingsBtn;
     private PomodoroState state;
     private Timer swingTimer;
-    private int currentFocusMin = 25;
-    private int currentShortBreakMin = 5;
-    private int currentLongBreakMin = 15;
-    private int numberOfSessions = 2;
+    private PomodoroSettings settings;
 
 
     public MainFrame() {
         setTitle("CatFocus");
         setSize(400, 200);
-        setMinimumSize(new Dimension(400,200));
+        setMinimumSize(new Dimension(400, 200));
         setLayout(new GridBagLayout());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         //initial state
-        state = new PomodoroState(currentFocusMin*60, false, PomodoroPhase.FOCUS, currentFocusMin*60,
-                currentShortBreakMin*60, currentLongBreakMin*60, 0, numberOfSessions);
+        settings = new PomodoroSettings(25 * 60, 5 * 60, 15 * 60, 2);
+        state = new PomodoroState(settings.focusDuration(), false, PomodoroPhase.FOCUS, 0, settings);
         phaseLabel = new JLabel(formatPhase(state.getPhase()), SwingConstants.CENTER);
         phaseLabel.setFont(new Font("SansSerif", Font.BOLD, 40));
 
@@ -70,20 +68,22 @@ public class MainFrame extends JFrame {
         });
 
         resetBtn.addActionListener(e -> {
-            state = state.reset(currentFocusMin * 60, currentShortBreakMin * 60, currentLongBreakMin * 60);
+            state = state.reset(settings);
             swingTimer.stop();
             updateUI();
         });
 
         settingsBtn.addActionListener(e -> {
-            SettingsDialog dialog = new SettingsDialog(this, currentFocusMin, currentShortBreakMin, currentLongBreakMin, numberOfSessions);
+            SettingsDialog dialog = new SettingsDialog(this, settings);
             dialog.setVisible(true);
             if (dialog.isConfirmed()) {
-                currentFocusMin = dialog.getFocusMinutes();
-                currentShortBreakMin = dialog.getShortBreakMinutes();
-                currentLongBreakMin = dialog.getLongBreakMinutes();
-                numberOfSessions = dialog.getNumberOfSessions();
-                updateSettings();
+                settings = new PomodoroSettings(
+                        dialog.getFocusMinutes() * 60,
+                        dialog.getShortBreakMinutes() * 60,
+                        dialog.getLongBreakMinutes() * 60,
+                        dialog.getNumberOfSessions()
+                );
+                updateSettings(settings);
             }
         });
     }
@@ -107,9 +107,9 @@ public class MainFrame extends JFrame {
         }
     }
 
-    private void updateSettings() {
+    private void updateSettings(PomodoroSettings settings) {
         if (!state.isRunning()) {
-            state = state.reset(currentFocusMin * 60, currentShortBreakMin * 60, currentLongBreakMin * 60);
+            state = state.reset(settings);
             updateUI();
         }
     }
