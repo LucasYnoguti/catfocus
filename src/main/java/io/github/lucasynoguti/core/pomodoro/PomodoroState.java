@@ -10,9 +10,10 @@ public class PomodoroState {
     private final int shortBreakDuration;
     private final int longBreakDuration;
     private final int completedFocusSessions;
+    private final int numberOfSessions;
 
     public PomodoroState(int remainingSeconds, boolean running, PomodoroPhase phase,
-                         int focusDuration, int shortBreakDuration, int longBreakDuration, int completedFocusSessions) {
+                         int focusDuration, int shortBreakDuration, int longBreakDuration, int completedFocusSessions, int numberOfSessions) {
 
         this.remainingSeconds = remainingSeconds;
         this.running = running;
@@ -21,6 +22,7 @@ public class PomodoroState {
         this.shortBreakDuration = shortBreakDuration;
         this.longBreakDuration = longBreakDuration;
         this.completedFocusSessions = completedFocusSessions;
+        this.numberOfSessions = numberOfSessions;
     }
 
     public int getRemainingSeconds() {
@@ -39,20 +41,20 @@ public class PomodoroState {
         if (!running) return this;
         if (remainingSeconds > 0) {
             return new PomodoroState(remainingSeconds - 1, true, phase,
-                    focusDuration, shortBreakDuration, longBreakDuration, completedFocusSessions);
+                    focusDuration, shortBreakDuration, longBreakDuration, completedFocusSessions, numberOfSessions);
         } else {
             if (phase == PomodoroPhase.FOCUS) {
                 int newCount = completedFocusSessions + 1;
-                if (newCount > 2) { // 2 ciclos de foco atingidos
+                if (newCount > numberOfSessions) {
                     return new PomodoroState(longBreakDuration, false, PomodoroPhase.LONG_BREAK,
-                            focusDuration, shortBreakDuration, longBreakDuration, 0);
+                            focusDuration, shortBreakDuration, longBreakDuration, 0, numberOfSessions);
                 } else {
                     return new PomodoroState(shortBreakDuration, false, PomodoroPhase.SHORT_BREAK,
-                            focusDuration, shortBreakDuration, longBreakDuration, newCount);
+                            focusDuration, shortBreakDuration, longBreakDuration, newCount, numberOfSessions);
                 }
             } else {
                 return new PomodoroState(focusDuration, false, PomodoroPhase.FOCUS,
-                        focusDuration, shortBreakDuration, longBreakDuration, completedFocusSessions);
+                        focusDuration, shortBreakDuration, longBreakDuration, completedFocusSessions, numberOfSessions);
             }
         }
 
@@ -60,17 +62,17 @@ public class PomodoroState {
 
     public PomodoroState start() {
         return new PomodoroState(remainingSeconds, true, phase, focusDuration,
-                shortBreakDuration, longBreakDuration, completedFocusSessions);
+                shortBreakDuration, longBreakDuration, completedFocusSessions, numberOfSessions);
     }
 
     public PomodoroState pause() {
         return new PomodoroState(remainingSeconds, false, phase, focusDuration,
-                shortBreakDuration, longBreakDuration, completedFocusSessions);
+                shortBreakDuration, longBreakDuration, completedFocusSessions, numberOfSessions);
     }
 
     public PomodoroState reset(int focusDuration, int shortBreakDuration, int longBreakDuration) {
         return new PomodoroState(focusDuration, false, phase, focusDuration,
-                shortBreakDuration, longBreakDuration, completedFocusSessions);
+                shortBreakDuration, longBreakDuration, completedFocusSessions, numberOfSessions);
     }
 
     private int getPhaseDuration(PomodoroPhase phase) {

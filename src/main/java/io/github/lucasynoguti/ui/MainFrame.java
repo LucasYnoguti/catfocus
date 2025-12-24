@@ -19,6 +19,7 @@ public class MainFrame extends JFrame {
     private int currentFocusMin = 25;
     private int currentShortBreakMin = 5;
     private int currentLongBreakMin = 15;
+    private int numberOfSessions = 2;
 
 
     public MainFrame() {
@@ -29,14 +30,15 @@ public class MainFrame extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         //initial state
-        state = new PomodoroState(1, false, PomodoroPhase.FOCUS, 1, 1, 1, 0);
+        state = new PomodoroState(currentFocusMin*60, false, PomodoroPhase.FOCUS, currentFocusMin*60,
+                currentShortBreakMin*60, currentLongBreakMin*60, 0, numberOfSessions);
         phaseLabel = new JLabel(formatPhase(state.getPhase()), SwingConstants.CENTER);
         phaseLabel.setFont(new Font("SansSerif", Font.BOLD, 40));
 
         timeLabel = new JLabel(formatTime(state.getRemainingSeconds()), SwingConstants.CENTER);
         timeLabel.setFont(new Font("SansSerif", Font.BOLD, 40));
 
-        playPauseBtn = new AppButton("Play");
+        playPauseBtn = new AppButton("▶");
         resetBtn = new AppButton("Reset");
         settingsBtn = new AppButton("⚙");
 
@@ -74,12 +76,13 @@ public class MainFrame extends JFrame {
         });
 
         settingsBtn.addActionListener(e -> {
-            SettingsDialog dialog = new SettingsDialog(this, currentFocusMin, currentShortBreakMin, currentLongBreakMin);
+            SettingsDialog dialog = new SettingsDialog(this, currentFocusMin, currentShortBreakMin, currentLongBreakMin, numberOfSessions);
             dialog.setVisible(true);
             if (dialog.isConfirmed()) {
                 currentFocusMin = dialog.getFocusMinutes();
                 currentShortBreakMin = dialog.getShortBreakMinutes();
                 currentLongBreakMin = dialog.getLongBreakMinutes();
+                numberOfSessions = dialog.getNumberOfSessions();
                 updateSettings();
             }
         });
@@ -125,6 +128,6 @@ public class MainFrame extends JFrame {
     private void updateUI() {
         timeLabel.setText(formatTime(state.getRemainingSeconds()));
         phaseLabel.setText(formatPhase(state.getPhase()));
-        playPauseBtn.setText(state.isRunning() ? "Pause" : "Play");
+        playPauseBtn.setText(state.isRunning() ? "⏸" : "▶");
     }
 }
