@@ -18,47 +18,52 @@ public class PomodoroState {
         this.settings = settings;
     }
 
-    public int getRemainingSeconds() {
-        return remainingSeconds;
-    }
 
-    public PomodoroPhase getPhase() {
-        return phase;
-    }
-
-    public boolean isRunning() {
-        return running;
-    }
 
     public PomodoroState tick() {
         if (!running) return this;
         if (remainingSeconds > 0) {
-            return new PomodoroState(remainingSeconds - 1, true, phase, completedFocusSessions, settings);
+            return withRemainingSeconds(remainingSeconds - 1);
         } else {
             if (phase == PomodoroPhase.FOCUS) {
                 int newCount = completedFocusSessions + 1;
                 if (newCount > settings.numberOfSessions()) {
-                    return new PomodoroState(settings.longBreakDuration(), false, PomodoroPhase.LONG_BREAK, 0, settings);
+                    newCount = 0;
+                    return this
+                            .withRemainingSeconds(settings.longBreakDuration())
+                            .withRunning(false)
+                            .withPhase(PomodoroPhase.LONG_BREAK)
+                            .withCompletedFocusSessions(newCount);
                 } else {
-                    return new PomodoroState(settings.shortBreakDuration(), false, PomodoroPhase.SHORT_BREAK, newCount, settings);
+                    return this
+                            .withRemainingSeconds(settings.shortBreakDuration())
+                            .withRunning(false)
+                            .withPhase(PomodoroPhase.SHORT_BREAK)
+                            .withCompletedFocusSessions(newCount);
                 }
             } else {
-                return new PomodoroState(settings.focusDuration(), false, PomodoroPhase.FOCUS, completedFocusSessions, settings);
+                return this
+                        .withRemainingSeconds(settings.focusDuration())
+                        .withRunning(false)
+                        .withPhase(PomodoroPhase.FOCUS);
             }
         }
 
     }
 
     public PomodoroState start() {
-        return new PomodoroState(remainingSeconds, true, phase, completedFocusSessions, settings);
+        return withRunning(true);
     }
 
     public PomodoroState pause() {
-        return new PomodoroState(remainingSeconds, false, phase, completedFocusSessions, settings);
+        return withRunning(false);
     }
 
     public PomodoroState reset(PomodoroSettings settings) {
-        return new PomodoroState(getPhaseDuration(phase), false, phase, completedFocusSessions, settings);
+        return this
+                .withRemainingSeconds(getPhaseDuration(phase))
+                .withRunning(false)
+                .withSettings(settings);
     }
 
     private int getPhaseDuration(PomodoroPhase phase) {
@@ -72,5 +77,38 @@ public class PomodoroState {
             default:
                 return settings.focusDuration();
         }
+    }
+
+    public int getRemainingSeconds() {
+        return remainingSeconds;
+    }
+
+    public PomodoroPhase getPhase() {
+        return phase;
+    }
+
+    public boolean isRunning() {
+        return running;
+    }
+
+    // WITHERS
+    public PomodoroState withRemainingSeconds(int remainingSeconds) {
+        return new PomodoroState(remainingSeconds, running, phase, completedFocusSessions, settings);
+    }
+
+    public PomodoroState withRunning(boolean running) {
+        return new PomodoroState(remainingSeconds, running, phase, completedFocusSessions, settings);
+    }
+
+    public PomodoroState withPhase(PomodoroPhase phase) {
+        return new PomodoroState(remainingSeconds, running, phase, completedFocusSessions, settings);
+    }
+
+    public PomodoroState withCompletedFocusSessions(int completedFocusSessions) {
+        return new PomodoroState(remainingSeconds, running, phase, completedFocusSessions, settings);
+    }
+
+    public PomodoroState withSettings(PomodoroSettings settings) {
+        return new PomodoroState(remainingSeconds, running, phase, completedFocusSessions, settings);
     }
 }

@@ -5,5 +5,4 @@ public record PomodoroSettings(
         int shortBreakDuration,
         int longBreakDuration,
         int numberOfSessions
-) {
-}
+) {}

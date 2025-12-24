@@ -21,7 +21,7 @@ public class SettingsDialog extends JDialog {
         gbc.fill = GridBagConstraints.NONE;
         gbc.anchor = GridBagConstraints.WEST;
 
-        Integer[] numberOfSessionsOptions = {1, 2, 3, 4};
+        Integer[] numberOfSessionsOptions = {2, 1, 3, 4};
         Integer[] focusOptions = {25, 15, 20, 30, 40, 50, 60};
         Integer[] shortBreakOptions = {5, 7, 10, 15};
         Integer[] longBreakOptions = {15, 20, 30, 45, 60};
