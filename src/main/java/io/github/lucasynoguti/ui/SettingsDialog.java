@@ -22,9 +22,9 @@ public class SettingsDialog extends JDialog {
         gbc.anchor = GridBagConstraints.WEST;
 
         Integer[] numberOfSessionsOptions = {2, 1, 3, 4};
-        Integer[] focusOptions = {25, 15, 20, 30, 40, 50, 60};
-        Integer[] shortBreakOptions = {5, 7, 10, 15};
-        Integer[] longBreakOptions = {15, 20, 30, 45, 60};
+        Integer[] focusOptions = {25, 15, 20, 30, 40, 50, 60, 0};
+        Integer[] shortBreakOptions = {5, 7, 10, 15, 0};
+        Integer[] longBreakOptions = {15, 20, 30, 45, 60,0};
 
         focusDropdown = new JComboBox<>(focusOptions);
         focusDropdown.setSelectedItem(settings.focusDuration() / 60);
@@ -39,33 +39,10 @@ public class SettingsDialog extends JDialog {
         numberOfSessionsDropdown.setSelectedItem(settings.numberOfSessions() / 60);
 
         //LINE 0
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        add(new JLabel("Focus Duration (min):"), gbc);
-        gbc.gridx = 1;
-        add(focusDropdown, gbc);
-
-
-        //LINE 1
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        add(new JLabel("Short Break Duration (min):"), gbc);
-        gbc.gridx = 1;
-        add(shortBreakDropdown, gbc);
-
-        //LINE 2
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        add(new JLabel("Long Break Duration (min):"), gbc);
-        gbc.gridx = 1;
-        add(longBreakDropdown, gbc);
-
-        //LINE 3
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        add(new JLabel("Number of sessions before long break:"), gbc);
-        gbc.gridx = 1;
-        add(numberOfSessionsDropdown, gbc);
+        addSettingRow("Focus Duration (min):", focusDropdown, 0, gbc);
+        addSettingRow("Sort Break Duration (min):", shortBreakDropdown, 1, gbc);
+        addSettingRow("Long Break Duration (min):", longBreakDropdown, 2, gbc);
+        addSettingRow("Sessions per cycle:", numberOfSessionsDropdown, 3, gbc);
 
         //LINE 4
         gbc.insets = new Insets(20, 10, 10, 10);
@@ -83,6 +60,14 @@ public class SettingsDialog extends JDialog {
         pack();
         setMinimumSize(getSize());
         setLocationRelativeTo(owner);
+    }
+
+    private void addSettingRow(String labelText, JComponent component, int row, GridBagConstraints gbc) {
+        gbc.gridy = row;
+        gbc.gridx = 0;
+        add(new JLabel(labelText), gbc);
+        gbc.gridx = 1;
+        add(component, gbc);
     }
 
     public boolean isConfirmed() {
