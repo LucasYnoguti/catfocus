@@ -14,6 +14,7 @@ public class SettingsDialog extends JDialog {
 
     public SettingsDialog(Frame owner, PomodoroSettings settings) {
         super(owner, "Settings", true);
+        getContentPane().setBackground(AppTheme.BG_COLOR);
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
 

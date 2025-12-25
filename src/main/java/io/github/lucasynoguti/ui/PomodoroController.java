@@ -21,7 +21,10 @@ public class PomodoroController {
     }
 
     private void tick() {
+        PomodoroPhase previousPhase = state.getPhase();
         state = state.tick();
+        if(previousPhase != state.getPhase())
+            SoundPlayer.playSound("/sounds/ding.wav");
         onTick.run();
     }
 
