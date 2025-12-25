@@ -14,7 +14,9 @@ public class MainFrame extends JFrame {
     private final PomodoroPanel pomodoroPanel;
     private final PomodoroController controller;
 
-    public MainFrame() {
+    public MainFrame(PomodoroController controller) {
+        this.controller = controller;
+
         setTitle("CatFocus");
         setSize(500, 300);
         setMinimumSize(new Dimension(300, 200));
@@ -22,9 +24,6 @@ public class MainFrame extends JFrame {
         getContentPane().setBackground(AppTheme.BG_COLOR);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        //model
-        final PomodoroSettings settings = new PomodoroSettings(25 * 60, 5 * 60, 15 * 60, 2);
-        controller = new PomodoroController(settings, this::updateView);
 
         //view
         pomodoroPanel = new PomodoroPanel();
@@ -61,7 +60,7 @@ public class MainFrame extends JFrame {
         }
     }
 
-    private void updateView() {
+    public void updateView() {
         PomodoroState state = controller.getState();
         pomodoroPanel.updateTime(formatTime(state.getRemainingSeconds()));
         pomodoroPanel.updatePhase(formatPhase(state.getPhase()));

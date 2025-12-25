@@ -4,8 +4,11 @@ import javax.swing.*;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import io.github.lucasynoguti.core.DatabaseManager;
+import io.github.lucasynoguti.core.pomodoro.PomodoroSettings;
+import io.github.lucasynoguti.core.pomodoro.SettingsDAO;
 import io.github.lucasynoguti.ui.AppTheme;
 import io.github.lucasynoguti.ui.MainFrame;
+import io.github.lucasynoguti.ui.PomodoroController;
 import io.github.lucasynoguti.ui.SoundPlayer;
 
 public class Main {
@@ -21,10 +24,16 @@ public class Main {
 
         //initializing database
         DatabaseManager.initialize();
-
+        SettingsDAO settingsDAO = new SettingsDAO();
+        PomodoroSettings settings = settingsDAO.load();
+        PomodoroController controller = new PomodoroController(settings, settingsDAO);
         //preloading sounds to play faster
         SoundPlayer.loadSounds("/sounds/ding.wav");
 
-        SwingUtilities.invokeLater(() -> new MainFrame().setVisible(true));
+        SwingUtilities.invokeLater(() -> {
+            MainFrame mainFrame = new MainFrame(controller);
+            controller.setOnUpdateCallback(mainFrame::updateView);
+            mainFrame.setVisible(true);
+        });
     }
 }
