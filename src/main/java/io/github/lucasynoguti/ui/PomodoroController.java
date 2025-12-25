@@ -1,5 +1,6 @@
 package io.github.lucasynoguti.ui;
 
+import io.github.lucasynoguti.core.database.dao.SettingsDAO;
 import io.github.lucasynoguti.core.pomodoro.*;
 
 import javax.swing.Timer;

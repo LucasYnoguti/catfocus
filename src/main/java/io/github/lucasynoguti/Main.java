@@ -3,9 +3,10 @@ package io.github.lucasynoguti;
 import javax.swing.*;
 
 import com.formdev.flatlaf.FlatLightLaf;
-import io.github.lucasynoguti.core.DatabaseManager;
+import io.github.lucasynoguti.core.database.DatabaseInitializer;
+import io.github.lucasynoguti.core.database.DatabaseManager;
 import io.github.lucasynoguti.core.pomodoro.PomodoroSettings;
-import io.github.lucasynoguti.core.pomodoro.SettingsDAO;
+import io.github.lucasynoguti.core.database.dao.SettingsDAO;
 import io.github.lucasynoguti.ui.AppTheme;
 import io.github.lucasynoguti.ui.MainFrame;
 import io.github.lucasynoguti.ui.PomodoroController;
@@ -23,7 +24,7 @@ public class Main {
         UIManager.put("Component.focusColor", AppTheme.PRIMARY_COLOR);
 
         //initializing database
-        DatabaseManager.initialize();
+        DatabaseInitializer.initialize();
         SettingsDAO settingsDAO = new SettingsDAO();
         PomodoroSettings settings = settingsDAO.load();
         PomodoroController controller = new PomodoroController(settings, settingsDAO);

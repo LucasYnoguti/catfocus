@@ -1,5 +1,6 @@
-package io.github.lucasynoguti.core.pomodoro;
-import io.github.lucasynoguti.core.DatabaseManager;
+package io.github.lucasynoguti.core.database.dao;
+import io.github.lucasynoguti.core.database.DatabaseManager;
+import io.github.lucasynoguti.core.pomodoro.PomodoroSettings;
 
 import java.sql.*;
 
