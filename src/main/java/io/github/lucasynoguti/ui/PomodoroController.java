@@ -1,24 +1,26 @@
 package io.github.lucasynoguti.ui;
 
-import io.github.lucasynoguti.core.pomodoro.PomodoroPhase;
-import io.github.lucasynoguti.core.pomodoro.PomodoroSettings;
-import io.github.lucasynoguti.core.pomodoro.PomodoroState;
-import io.github.lucasynoguti.core.pomodoro.SettingsDAO;
+import io.github.lucasynoguti.core.pomodoro.*;
 
 import javax.swing.Timer;
 
 public class PomodoroController {
 
-    private PomodoroState state;
-    private PomodoroSettings settings;
+    private PomodoroTransitions transitions;
     private final SettingsDAO settingsDAO;
     private final Timer swingTimer;
     private Runnable onUpdate; // Callback to notify view
 
     public PomodoroController(PomodoroSettings settings, SettingsDAO settingsDAO) {
         this.settingsDAO = settingsDAO;
-        this.settings = settings;
-        this.state = new PomodoroState(settings.focusDuration(), false, PomodoroPhase.FOCUS, 0, settings);
+        PomodoroState initialState = new PomodoroState(
+                settings.focusDuration(),
+                false,
+                PomodoroPhase.FOCUS,
+                settings,
+                0
+        );
+        this.transitions = new PomodoroTransitions(initialState);
         this.swingTimer = new Timer(1000, e -> tick());
     }
 
@@ -27,22 +29,19 @@ public class PomodoroController {
     }
 
     public void updateSettings(PomodoroSettings newSettings) {
-        this.settings = newSettings;
         this.settingsDAO.saveSettings(newSettings);
-        if (!state.isRunning()) {
-            reset();
+        if (!transitions.isRunning()) {
+            this.transitions = transitions.reset(newSettings);
         } else {
-            this.state = state.withSettings(newSettings);
-            notifyUpdate();
+            this.transitions = transitions.withSettings(newSettings);
         }
+        notifyUpdate();
     }
 
     private void tick() {
-        PomodoroPhase previousPhase = state.getPhase();
-        state = state.tick();
-        
-        // Toca o som se a fase mudar (ex: Foco -> Pausa)
-        if (previousPhase != state.getPhase()) {
+        PomodoroPhase previousPhase = transitions.getPhase();
+        this.transitions = transitions.tick();
+        if (previousPhase != transitions.getPhase()) {
             SoundPlayer.playSound("/sounds/ding.wav");
         }
         
@@ -50,19 +49,19 @@ public class PomodoroController {
     }
 
     public void playPause() {
-        if (state.isRunning()) {
+        if (transitions.isRunning()) {
             swingTimer.stop();
-            state = state.pause();
+            this.transitions = transitions.pause();
         } else {
             swingTimer.start();
-            state = state.start();
+            this.transitions = transitions.start();
         }
         notifyUpdate();
     }
 
     public void reset() {
         swingTimer.stop();
-        state = state.reset(settings);
+        this.transitions = transitions.reset(transitions.getSettings());
         notifyUpdate();
     }
 
@@ -71,12 +70,10 @@ public class PomodoroController {
             onUpdate.run();
         }
     }
-
     public PomodoroState getState() {
-        return state;
+        return transitions.getState();
     }
-
     public PomodoroSettings getSettings() {
-        return settings;
+        return transitions.getSettings();
     }
 }

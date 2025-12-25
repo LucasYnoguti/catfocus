@@ -56,15 +56,14 @@ public class MainFrame extends JFrame {
                     dialog.getNumberOfSessions()
             );
             controller.updateSettings(newSettings);
-            updateView();
         }
     }
 
     public void updateView() {
         PomodoroState state = controller.getState();
-        pomodoroPanel.updateTime(formatTime(state.getRemainingSeconds()));
-        pomodoroPanel.updatePhase(formatPhase(state.getPhase()));
-        pomodoroPanel.updatePlayPause(state.isRunning());
+        pomodoroPanel.updateTime(formatTime(state.remainingSeconds()));
+        pomodoroPanel.updatePhase(formatPhase(state.phase()));
+        pomodoroPanel.updatePlayPause(state.running());
     }
 
     //helpers
