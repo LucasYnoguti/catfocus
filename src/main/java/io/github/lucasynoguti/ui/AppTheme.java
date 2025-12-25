@@ -1,7 +1,11 @@
 package io.github.lucasynoguti.ui;
 
+import io.github.lucasynoguti.core.pomodoro.PomodoroPhase;
+
 import java.awt.*;
 import java.io.InputStream;
+
+import static io.github.lucasynoguti.core.pomodoro.PomodoroPhase.LONG_BREAK;
 
 public final class AppTheme {
     private AppTheme() {} // impede instance creation
@@ -25,5 +29,13 @@ public final class AppTheme {
             font = new Font("Arial", Font.PLAIN, 12);
         }
         MAIN_FONT = font;
+    }
+
+    public static Color getColorForPhase(PomodoroPhase phase) {
+        return switch (phase) {
+            case FOCUS -> FOCUS_COLOR;
+            case SHORT_BREAK -> ACCENT_COLOR;
+            case LONG_BREAK -> ACCENT_COLOR;
+        };
     }
 }

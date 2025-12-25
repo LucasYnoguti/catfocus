@@ -62,7 +62,7 @@ public class MainFrame extends JFrame {
     public void updateView() {
         PomodoroState state = controller.getState();
         pomodoroPanel.updateTime(formatTime(state.remainingSeconds()));
-        pomodoroPanel.updatePhase(formatPhase(state.phase()));
+        pomodoroPanel.updatePhase(state.phase());
         pomodoroPanel.updatePlayPause(state.running());
     }
 

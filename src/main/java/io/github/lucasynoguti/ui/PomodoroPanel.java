@@ -1,4 +1,6 @@
 package io.github.lucasynoguti.ui;
+import io.github.lucasynoguti.core.pomodoro.PomodoroPhase;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -47,8 +49,10 @@ public class PomodoroPanel extends JPanel {
         timeLabel.setText(time);
     }
 
-    public void updatePhase(String phase) {
-        phaseLabel.setText(phase);
+    public void updatePhase(PomodoroPhase phase) {
+        phaseLabel.setText(phase.getDisplayName());
+        phaseLabel.setForeground(AppTheme.getColorForPhase(phase));
+        timeLabel.setForeground(AppTheme.getColorForPhase(phase));
     }
 
     public void updateFontSizes(int containerHeight) {
