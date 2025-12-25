@@ -3,6 +3,7 @@ package io.github.lucasynoguti;
 import javax.swing.*;
 
 import com.formdev.flatlaf.FlatLightLaf;
+import io.github.lucasynoguti.core.DatabaseManager;
 import io.github.lucasynoguti.ui.AppTheme;
 import io.github.lucasynoguti.ui.MainFrame;
 import io.github.lucasynoguti.ui.SoundPlayer;
@@ -17,6 +18,9 @@ public class Main {
         UIManager.put("ComboBox.selectionBackground", AppTheme.PRIMARY_COLOR);
         UIManager.put("List.selectionBackground", AppTheme.PRIMARY_COLOR);
         UIManager.put("Component.focusColor", AppTheme.PRIMARY_COLOR);
+
+        //initializing database
+        DatabaseManager.initialize();
 
         //preloading sounds to play faster
         SoundPlayer.loadSounds("/sounds/ding.wav");
