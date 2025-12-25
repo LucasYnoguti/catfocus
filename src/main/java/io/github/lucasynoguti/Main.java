@@ -5,6 +5,7 @@ import javax.swing.*;
 import com.formdev.flatlaf.FlatLightLaf;
 import io.github.lucasynoguti.ui.AppTheme;
 import io.github.lucasynoguti.ui.MainFrame;
+import io.github.lucasynoguti.ui.SoundPlayer;
 
 public class Main {
     public static void main(String[] args) {
@@ -16,6 +17,9 @@ public class Main {
         UIManager.put("ComboBox.selectionBackground", AppTheme.PRIMARY_COLOR);
         UIManager.put("List.selectionBackground", AppTheme.PRIMARY_COLOR);
         UIManager.put("Component.focusColor", AppTheme.PRIMARY_COLOR);
+
+        //preloading sounds to play faster
+        SoundPlayer.loadSounds("/sounds/ding.wav");
 
         SwingUtilities.invokeLater(() -> new MainFrame().setVisible(true));
     }
