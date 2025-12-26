@@ -29,19 +29,21 @@ public class SettingsDAO {
 
     public PomodoroSettings load() {
         String sql = "SELECT * FROM settings WHERE id = 1";
-        ResultSet rs = null;
-        try (Connection conn = DatabaseManager.getConnection();) {
-            Statement stmt = conn.createStatement();
-            rs = stmt.executeQuery(sql);
-            int id = rs.getInt("id");
-            int focusDuration = rs.getInt("focus_sec");
-            int shortBreakDuration = rs.getInt("short_break_sec");
-            int longBreakDuration = rs.getInt("long_break_sec");
-            int numberOfSessions = rs.getInt("sessions");
-            return new PomodoroSettings(focusDuration, shortBreakDuration, longBreakDuration, numberOfSessions);
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            if(rs.next())
+            {
+                return new PomodoroSettings(
+                        rs.getInt("focus_sec"),
+                        rs.getInt("short_break_sec"),
+                        rs.getInt("long_break_sec"),
+                        rs.getInt("sessions")
+                );
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return new PomodoroSettings(25 * 60, 5 * 60, 15 * 60, 4);
+        return PomodoroSettings.defaultSettings();
     }
 }
