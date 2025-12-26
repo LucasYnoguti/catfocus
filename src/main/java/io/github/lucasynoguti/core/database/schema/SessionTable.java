@@ -1,0 +1,16 @@
+package io.github.lucasynoguti.core.database.schema;
+
+public class SessionTable {
+    public static final String CREATE_TABLE = """
+            CREATE TABLE sessions (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                start_time INTEGER NOT NULL,   -- timestamp (millis)
+                end_time INTEGER,              -- null if aborted session
+                planned_duration INTEGER NOT NULL, -- planned duration (s)
+                actual_duration INTEGER,          -- real duration (s)
+                phase TEXT NOT NULL,           -- FOCUS, SHORT_BREAK, LONG_BREAK
+                completed INTEGER NOT NULL,     -- 1 = concluded, 0 = interrupted
+                created_at INTEGER NOT NULL     --timestamp (millis)
+            );
+            """;
+}

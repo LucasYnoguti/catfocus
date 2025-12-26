@@ -1,5 +1,6 @@
 package io.github.lucasynoguti.core.database;
 
+import io.github.lucasynoguti.core.database.schema.SessionTable;
 import io.github.lucasynoguti.core.database.schema.SettingsTable;
 
 import java.sql.Connection;
@@ -14,6 +15,7 @@ public class DatabaseInitializer {
              Statement stmt = conn.createStatement()) {
 
             stmt.execute(SettingsTable.CREATE_TABLE);
+            stmt.execute(SessionTable.CREATE_TABLE);
             System.out.println("Database initialized");
 
         } catch (SQLException e) {
