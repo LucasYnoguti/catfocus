@@ -7,7 +7,7 @@ public class AppButton extends JButton {
     public AppButton(String text) {
         super(text);
         setFocusPainted(false);
-        setBackground(AppTheme.FOCUS_COLOR);
-        setForeground(Color.WHITE);
+        setBackground(Color.WHITE);
+        setForeground(AppTheme.PRIMARY_COLOR);
     }
 }

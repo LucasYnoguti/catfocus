@@ -21,7 +21,7 @@ public class MainFrame extends JFrame {
         setSize(500, 300);
         setMinimumSize(new Dimension(300, 200));
         setLayout(new GridBagLayout());
-        getContentPane().setBackground(AppTheme.BG_COLOR);
+        getContentPane().setBackground(AppTheme.PRIMARY_COLOR);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 
@@ -61,9 +61,13 @@ public class MainFrame extends JFrame {
 
     public void updateView() {
         PomodoroState state = controller.getState();
+
+        getContentPane().setBackground(AppTheme.getColorForPhase(state.phase()));
+
         pomodoroPanel.updateTime(formatTime(state.remainingSeconds()));
         pomodoroPanel.updatePhase(state.phase());
-        pomodoroPanel.updatePlayPause(state.running());
+        pomodoroPanel.updateButtons(state.running(), state.phase());
+
     }
 
     //helpers

@@ -5,15 +5,12 @@ import io.github.lucasynoguti.core.pomodoro.PomodoroPhase;
 import java.awt.*;
 import java.io.InputStream;
 
-import static io.github.lucasynoguti.core.pomodoro.PomodoroPhase.LONG_BREAK;
-
 public final class AppTheme {
     private AppTheme() {} // impede instance creation
-
-    public static final Color BG_COLOR = Color.WHITE; // white
+    public static final Color WHITE = Color.WHITE;
     public static final Color PRIMARY_COLOR = new Color(65, 100, 74); // light green
-    public static final Color ACCENT_COLOR = new Color(233,118,43); // orange
-    public static final Color FOCUS_COLOR = new Color(13,71,21);
+    public static final Color ORANGE = new Color(212, 139, 95); // orange
+    public static final Color DARK_GREEN = new Color(137, 112, 79);
 
     public static final Font MAIN_FONT;
 
@@ -33,9 +30,9 @@ public final class AppTheme {
 
     public static Color getColorForPhase(PomodoroPhase phase) {
         return switch (phase) {
-            case FOCUS -> FOCUS_COLOR;
-            case SHORT_BREAK -> ACCENT_COLOR;
-            case LONG_BREAK -> ACCENT_COLOR;
+            case FOCUS -> PRIMARY_COLOR;
+            case SHORT_BREAK -> DARK_GREEN;
+            case LONG_BREAK -> ORANGE;
         };
     }
 }

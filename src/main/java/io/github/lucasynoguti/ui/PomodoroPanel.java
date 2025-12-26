@@ -18,8 +18,8 @@ public class PomodoroPanel extends JPanel {
 
         phaseLabel = new JLabel("FOCUS", SwingConstants.CENTER);
         timeLabel = new JLabel("25:00", SwingConstants.CENTER);
-        phaseLabel.setForeground(AppTheme.FOCUS_COLOR);
-        timeLabel.setForeground(AppTheme.FOCUS_COLOR);
+        phaseLabel.setForeground(AppTheme.WHITE);
+        timeLabel.setForeground(AppTheme.WHITE);
 
         JPanel timerPanel = new JPanel(new BorderLayout());
         timerPanel.setOpaque(false);
@@ -51,8 +51,6 @@ public class PomodoroPanel extends JPanel {
 
     public void updatePhase(PomodoroPhase phase) {
         phaseLabel.setText(phase.getDisplayName());
-        phaseLabel.setForeground(AppTheme.getColorForPhase(phase));
-        timeLabel.setForeground(AppTheme.getColorForPhase(phase));
     }
 
     public void updateFontSizes(int containerHeight) {
@@ -73,8 +71,11 @@ public class PomodoroPanel extends JPanel {
         settingsBtn.setFont(buttonFont);
     }
 
-    public void updatePlayPause(boolean running) {
+    public void updateButtons(boolean running, PomodoroPhase phase) {
         playPauseBtn.setText(running ? "⏸" : "▶");
+        resetBtn.setForeground(AppTheme.getColorForPhase(phase));
+        playPauseBtn.setForeground(AppTheme.getColorForPhase(phase));
+        settingsBtn.setForeground(AppTheme.getColorForPhase(phase));
     }
 
 }
