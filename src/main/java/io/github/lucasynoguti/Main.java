@@ -5,6 +5,7 @@ import javax.swing.*;
 import com.formdev.flatlaf.FlatLightLaf;
 import io.github.lucasynoguti.core.database.DatabaseInitializer;
 import io.github.lucasynoguti.core.database.DatabaseManager;
+import io.github.lucasynoguti.core.database.dao.SessionDAO;
 import io.github.lucasynoguti.core.pomodoro.PomodoroSettings;
 import io.github.lucasynoguti.core.database.dao.SettingsDAO;
 import io.github.lucasynoguti.ui.AppTheme;
@@ -26,8 +27,9 @@ public class Main {
         //initializing database
         DatabaseInitializer.initialize();
         SettingsDAO settingsDAO = new SettingsDAO();
+        SessionDAO sessionDAO = new SessionDAO();
         PomodoroSettings settings = settingsDAO.load();
-        PomodoroController controller = new PomodoroController(settings, settingsDAO);
+        PomodoroController controller = new PomodoroController(settings, settingsDAO, sessionDAO);
         //preloading sounds to play faster
         SoundPlayer.loadSounds("/sounds/ding.wav");
 
