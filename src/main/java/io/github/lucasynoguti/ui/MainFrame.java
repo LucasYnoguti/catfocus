@@ -1,7 +1,11 @@
 package io.github.lucasynoguti.ui;
 
+import io.github.lucasynoguti.core.pomodoro.PomodoroController;
 import io.github.lucasynoguti.core.pomodoro.PomodoroSettings;
 import io.github.lucasynoguti.core.pomodoro.PomodoroState;
+import io.github.lucasynoguti.ui.pomodoro.AppTheme;
+import io.github.lucasynoguti.ui.pomodoro.SettingsDialog;
+import io.github.lucasynoguti.ui.timer.PomodoroPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,6 +13,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.net.URL;
 
 
 public class MainFrame extends JFrame {
@@ -24,6 +29,10 @@ public class MainFrame extends JFrame {
         setLayout(new GridBagLayout());
         getContentPane().setBackground(AppTheme.PRIMARY_COLOR);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+        URL iconURL = getClass().getResource("/images/icon/demonio.png");
+        ImageIcon icon = new ImageIcon(iconURL);
+        setIconImage(icon.getImage());
 
         addWindowListener(new WindowAdapter() {
             @Override

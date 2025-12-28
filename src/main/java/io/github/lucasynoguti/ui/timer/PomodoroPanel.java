@@ -1,5 +1,7 @@
-package io.github.lucasynoguti.ui;
+package io.github.lucasynoguti.ui.timer;
 import io.github.lucasynoguti.core.pomodoro.PomodoroPhase;
+import io.github.lucasynoguti.ui.components.AppButton;
+import io.github.lucasynoguti.ui.pomodoro.AppTheme;
 
 import javax.swing.*;
 import java.awt.*;

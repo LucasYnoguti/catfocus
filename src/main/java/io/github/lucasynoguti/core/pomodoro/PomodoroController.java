@@ -1,8 +1,8 @@
-package io.github.lucasynoguti.ui;
+package io.github.lucasynoguti.core.pomodoro;
 
 import io.github.lucasynoguti.core.database.dao.SessionDAO;
 import io.github.lucasynoguti.core.database.dao.SettingsDAO;
-import io.github.lucasynoguti.core.pomodoro.*;
+import io.github.lucasynoguti.util.SoundPlayer;
 
 import javax.swing.Timer;
 

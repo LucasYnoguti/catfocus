@@ -1,4 +1,4 @@
-package io.github.lucasynoguti.ui;
+package io.github.lucasynoguti.util;
 
 import javax.sound.sampled.*;
 import java.io.ByteArrayInputStream;

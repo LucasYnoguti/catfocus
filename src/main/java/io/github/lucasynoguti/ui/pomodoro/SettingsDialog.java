@@ -1,4 +1,4 @@
-package io.github.lucasynoguti.ui;
+package io.github.lucasynoguti.ui.pomodoro;
 
 import io.github.lucasynoguti.core.pomodoro.PomodoroSettings;
 
