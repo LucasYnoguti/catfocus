@@ -21,34 +21,12 @@ public class MainFrame extends JFrame {
     private final PomodoroController controller;
 
     public MainFrame(PomodoroController controller) {
-        setupWindowProperties();
         this.controller = controller;
-
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                controller.onAppClose();
-                dispose();
-                System.exit(0);
-            }
-        });
-
+        setupWindowProperties();
         //view
         pomodoroPanel = new PomodoroPanel();
         add(pomodoroPanel);
-
-        //actions
-        pomodoroPanel.getPlayPauseBtn().addActionListener(e -> controller.playPause());
-        pomodoroPanel.getResetBtn().addActionListener(e -> controller.reset());
-        pomodoroPanel.getSettingsBtn().addActionListener(e -> openSettings());
-
-        addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                pomodoroPanel.updateFontSizes(getHeight());
-            }
-        });
-
+        setupEventListeners();
         updateView();
     }
     private void setupWindowProperties(){
@@ -63,6 +41,29 @@ public class MainFrame extends JFrame {
             setIconImage(new ImageIcon(iconURL).getImage());
         }
     }
+
+    private void setupEventListeners() {
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                controller.onAppClose();
+                dispose();
+                System.exit(0);
+            }
+        });
+
+        pomodoroPanel.getPlayPauseBtn().addActionListener(e -> controller.playPause());
+        pomodoroPanel.getResetBtn().addActionListener(e -> controller.reset());
+        pomodoroPanel.getSettingsBtn().addActionListener(e -> openSettings());
+
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                pomodoroPanel.updateFontSizes(getHeight());
+            }
+        });
+    }
+
     private void openSettings() {
         SettingsDialog dialog = new SettingsDialog(this, controller.getSettings());
         dialog.setVisible(true);
