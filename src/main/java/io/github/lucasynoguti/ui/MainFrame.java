@@ -21,18 +21,8 @@ public class MainFrame extends JFrame {
     private final PomodoroController controller;
 
     public MainFrame(PomodoroController controller) {
+        setupWindowProperties();
         this.controller = controller;
-
-        setTitle("CatFocus");
-        setSize(500, 300);
-        setMinimumSize(new Dimension(300, 200));
-        setLayout(new GridBagLayout());
-        getContentPane().setBackground(AppTheme.PRIMARY_COLOR);
-        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-
-        URL iconURL = getClass().getResource("/images/icon/demonio.png");
-        ImageIcon icon = new ImageIcon(iconURL);
-        setIconImage(icon.getImage());
 
         addWindowListener(new WindowAdapter() {
             @Override
@@ -61,7 +51,18 @@ public class MainFrame extends JFrame {
 
         updateView();
     }
-
+    private void setupWindowProperties(){
+        setTitle("CatFocus");
+        setSize(500, 300);
+        setMinimumSize(new Dimension(300, 200));
+        setLayout(new GridBagLayout());
+        getContentPane().setBackground(AppTheme.PRIMARY_COLOR);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        URL iconURL = getClass().getResource("/images/icon/demonio.png");
+        if (iconURL != null) {
+            setIconImage(new ImageIcon(iconURL).getImage());
+        }
+    }
     private void openSettings() {
         SettingsDialog dialog = new SettingsDialog(this, controller.getSettings());
         dialog.setVisible(true);
