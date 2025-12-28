@@ -12,17 +12,17 @@ public class SessionDAO {
     public long beginSession(PomodoroPhase phase, int plannedDuration, long startTime) {
         String sql =
                 """
-                    INSERT INTO sessions (start_time, planned_duration, phase, completed) values (?,?,?,0);
-                """;
+                            INSERT INTO sessions (start_time, planned_duration, phase, completed) values (?,?,?,0);
+                        """;
 
         try (Connection conn = DatabaseManager.getConnection();) {
             PreparedStatement stmt = conn.prepareStatement(sql);
 
-            stmt.setLong(1,startTime);
-            stmt.setInt(2,plannedDuration);
+            stmt.setLong(1, startTime);
+            stmt.setInt(2, plannedDuration);
             stmt.setString(3, phase.name());
             int affectedRows = stmt.executeUpdate();
-            if(affectedRows > 0) {
+            if (affectedRows > 0) {
                 try (ResultSet rs = stmt.getGeneratedKeys()) {
                     if (rs.next()) {
                         return rs.getLong(1);
@@ -37,13 +37,13 @@ public class SessionDAO {
 
     public void finishSession(long sessionId, boolean completed, int actualDurationSeconds, long endTime) {
         String sql = """
-            UPDATE sessions
-            SET
-                end_time = ?,
-                actual_duration = ?,
-                completed = ?
-            WHERE id = ?
-        """;
+                    UPDATE sessions
+                    SET
+                        end_time = ?,
+                        actual_duration = ?,
+                        completed = ?
+                    WHERE id = ?
+                """;
 
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -60,5 +60,23 @@ public class SessionDAO {
         }
     }
 
+    public long getTotalFocusTime() {
+        long actualDuration = 0;
+        String sql =
+                        """
+                           SELECT SUM(actual_duration) FROM sessions WHERE phase = 'FOCUS';
+                       """;
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
 
+            if (rs.next()) {
+                return rs.getLong(1);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao calcular tempo total de foco", e);
+        }
+        return 0;
+    }
 }
