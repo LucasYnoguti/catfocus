@@ -12,7 +12,7 @@ public class SettingsDAO {
                 """
                     INSERT OR REPLACE INTO settings 
                            (id, focus_sec, short_break_sec, long_break_sec, sessions)
-                           VALUES (1,?,?,?,?)
+                           VALUES (1,?,?,?,?);
                 """;
 
         try (Connection conn = DatabaseManager.getConnection();) {

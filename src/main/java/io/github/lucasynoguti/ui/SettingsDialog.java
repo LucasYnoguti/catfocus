@@ -14,7 +14,7 @@ public class SettingsDialog extends JDialog {
 
     public SettingsDialog(Frame owner, PomodoroSettings settings) {
         super(owner, "Settings", true);
-        getContentPane().setBackground(AppTheme.BG_COLOR);
+        getContentPane().setBackground(AppTheme.WHITE);
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
 
@@ -22,10 +22,10 @@ public class SettingsDialog extends JDialog {
         gbc.fill = GridBagConstraints.NONE;
         gbc.anchor = GridBagConstraints.WEST;
 
-        Integer[] numberOfSessionsOptions = {2, 1, 3, 4};
-        Integer[] focusOptions = {25, 15, 20, 30, 40, 50, 60, 0};
-        Integer[] shortBreakOptions = {5, 7, 10, 15, 0};
-        Integer[] longBreakOptions = {15, 20, 30, 45, 60,0};
+        Integer[] numberOfSessionsOptions = {1, 2, 3, 4};
+        Integer[] focusOptions = {15, 20, 25, 30, 40, 50, 60, 75, 0};
+        Integer[] shortBreakOptions = {5, 7, 10, 15, 20, 0};
+        Integer[] longBreakOptions = {10, 15, 20, 30, 45, 60, 0};
 
         focusDropdown = new JComboBox<>(focusOptions);
         focusDropdown.setSelectedItem(settings.focusDuration() / 60);
@@ -39,7 +39,7 @@ public class SettingsDialog extends JDialog {
         numberOfSessionsDropdown = new JComboBox<>(numberOfSessionsOptions);
         numberOfSessionsDropdown.setSelectedItem(settings.numberOfSessions());
 
-        //LINE 0
+        //LINE 0 - 3
         addSettingRow("Focus Duration (min):", focusDropdown, 0, gbc);
         addSettingRow("Sort Break Duration (min):", shortBreakDropdown, 1, gbc);
         addSettingRow("Long Break Duration (min):", longBreakDropdown, 2, gbc);
@@ -67,10 +67,10 @@ public class SettingsDialog extends JDialog {
         gbc.gridy = row;
         gbc.gridx = 0;
         JLabel label = new JLabel(labelText);
-        label.setFont(new Font("SansSerif",Font.PLAIN, 12));
+        label.setFont(new Font("SansSerif", Font.PLAIN, 12));
         add(label, gbc);
         gbc.gridx = 1;
-        component.setFont(new Font("SansSerif",Font.PLAIN, 12));
+        component.setFont(new Font("SansSerif", Font.PLAIN, 12));
         add(component, gbc);
     }
 
