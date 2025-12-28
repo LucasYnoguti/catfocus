@@ -1,6 +1,5 @@
 package io.github.lucasynoguti.ui;
 
-import io.github.lucasynoguti.core.pomodoro.PomodoroPhase;
 import io.github.lucasynoguti.core.pomodoro.PomodoroSettings;
 import io.github.lucasynoguti.core.pomodoro.PomodoroState;
 
@@ -8,6 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 
 public class MainFrame extends JFrame {
@@ -22,8 +23,16 @@ public class MainFrame extends JFrame {
         setMinimumSize(new Dimension(300, 200));
         setLayout(new GridBagLayout());
         getContentPane().setBackground(AppTheme.PRIMARY_COLOR);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                controller.onAppClose();
+                dispose();
+                System.exit(0);
+            }
+        });
 
         //view
         pomodoroPanel = new PomodoroPanel();
@@ -75,13 +84,5 @@ public class MainFrame extends JFrame {
         int min = totalSeconds / 60;
         int sec = totalSeconds % 60;
         return String.format("%02d:%02d", min, sec);
-    }
-
-    private String formatPhase(PomodoroPhase phase) {
-        return switch (phase) {
-            case FOCUS -> "FOCUS";
-            case SHORT_BREAK -> "SHORT BREAK";
-            case LONG_BREAK -> "LONG BREAK";
-        };
     }
 }

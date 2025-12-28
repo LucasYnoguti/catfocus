@@ -81,6 +81,7 @@ public class PomodoroController {
         }
         swingTimer.stop();
         this.transitions = transitions.reset(transitions.getSettings());
+        System.out.println(sessionDAO.getTotalFocusTime());
         notifyUpdate();
     }
 
@@ -110,4 +111,10 @@ public class PomodoroController {
         sessionStartTime = -1;
     }
 
+    public void onAppClose() {
+        if(currentSessionId != -1)
+        {
+            finishCurrentSession(false);
+        }
+    }
 }
