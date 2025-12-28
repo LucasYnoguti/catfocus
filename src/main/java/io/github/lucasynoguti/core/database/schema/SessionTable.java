@@ -5,6 +5,7 @@ public class SessionTable {
             CREATE TABLE IF NOT EXISTS sessions (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 start_time INTEGER NOT NULL,   -- timestamp (millis)
+                created_at DATE DEFAULT (DATE('now', 'localtime')),
                 end_time INTEGER,              -- null if aborted session
                 planned_duration INTEGER NOT NULL, -- planned duration (s)
                 actual_duration INTEGER,          -- real duration (s)
