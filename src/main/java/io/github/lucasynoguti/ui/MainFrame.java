@@ -18,22 +18,25 @@ import java.net.URL;
 
 public class MainFrame extends JFrame {
     private final PomodoroPanel pomodoroPanel;
+    private final RootPanel rootPanel;
     private final PomodoroController controller;
 
     public MainFrame(PomodoroController controller) {
         this.controller = controller;
         setupWindowProperties();
-        //view
+        rootPanel = new RootPanel();
         pomodoroPanel = new PomodoroPanel();
-        add(pomodoroPanel);
+        rootPanel.addScreen(pomodoroPanel, RootPanel.POMODORO);
+        add(rootPanel, BorderLayout.CENTER);
         setupEventListeners();
+        rootPanel.showScreen(RootPanel.POMODORO);
         updateView();
     }
     private void setupWindowProperties(){
         setTitle("CatFocus");
         setSize(500, 300);
         setMinimumSize(new Dimension(300, 200));
-        setLayout(new GridBagLayout());
+        setLayout(new BorderLayout());
         getContentPane().setBackground(AppTheme.PRIMARY_COLOR);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         URL iconURL = getClass().getResource("/images/icon/demonio.png");
@@ -59,7 +62,7 @@ public class MainFrame extends JFrame {
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                pomodoroPanel.updateFontSizes(getHeight());
+                pomodoroPanel.onResize(getHeight(), getWidth());
             }
         });
     }
@@ -81,19 +84,7 @@ public class MainFrame extends JFrame {
 
     public void updateView() {
         PomodoroState state = controller.getState();
-
-        getContentPane().setBackground(AppTheme.getColorForPhase(state.phase()));
-
-        pomodoroPanel.updateTime(formatTime(state.remainingSeconds()));
-        pomodoroPanel.updatePhase(state.phase());
-        pomodoroPanel.updateButtons(state.running(), state.phase());
-
-    }
-
-    //helpers
-    private String formatTime(int totalSeconds) {
-        int min = totalSeconds / 60;
-        int sec = totalSeconds % 60;
-        return String.format("%02d:%02d", min, sec);
+        rootPanel.updateBackground(AppTheme.getColorForPhase(state.phase()));
+        pomodoroPanel.renderState(state);
     }
 }

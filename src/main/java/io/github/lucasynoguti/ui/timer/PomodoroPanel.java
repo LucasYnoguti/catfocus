@@ -1,5 +1,6 @@
 package io.github.lucasynoguti.ui.timer;
 import io.github.lucasynoguti.core.pomodoro.PomodoroPhase;
+import io.github.lucasynoguti.core.pomodoro.PomodoroState;
 import io.github.lucasynoguti.ui.components.AppButton;
 import io.github.lucasynoguti.ui.pomodoro.AppTheme;
 
@@ -55,9 +56,9 @@ public class PomodoroPanel extends JPanel {
         phaseLabel.setText(phase.getDisplayName());
     }
 
-    public void updateFontSizes(int containerHeight) {
+    public void updateFontSizes(int containerHeight, int containerWidth) {
         Font labelFont = AppTheme.MAIN_FONT
-                .deriveFont(Font.PLAIN, containerHeight / 5f);
+                .deriveFont(Font.PLAIN, containerHeight/ 5);
 
         timeLabel.setFont(labelFont);
         phaseLabel.setFont(labelFont);
@@ -65,7 +66,7 @@ public class PomodoroPanel extends JPanel {
         Font buttonFont = new Font(
                 "SansSerif",
                 Font.BOLD,
-                containerHeight / 12
+                (containerHeight) / 12
         );
 
         playPauseBtn.setFont(buttonFont);
@@ -78,6 +79,22 @@ public class PomodoroPanel extends JPanel {
         resetBtn.setForeground(AppTheme.getColorForPhase(phase));
         playPauseBtn.setForeground(AppTheme.getColorForPhase(phase));
         settingsBtn.setForeground(AppTheme.getColorForPhase(phase));
+    }
+
+    public void onResize(int containerHeight, int containerWidth) {
+        updateFontSizes(containerHeight, containerWidth);
+    }
+
+    public void renderState(PomodoroState state) {
+        updateTime(formatTime(state.remainingSeconds()));
+        updatePhase(state.phase());
+        updateButtons(state.running(), state.phase());
+    }
+
+    private String formatTime(int totalSeconds) {
+        int min = totalSeconds / 60;
+        int sec = totalSeconds % 60;
+        return String.format("%02d:%02d", min, sec);
     }
 
 }
