@@ -1,6 +1,6 @@
 package io.github.lucasynoguti.ui.components;
 
-import io.github.lucasynoguti.ui.pomodoro.AppTheme;
+import io.github.lucasynoguti.ui.theme.AppTheme;
 
 import javax.swing.*;
 import java.awt.*;

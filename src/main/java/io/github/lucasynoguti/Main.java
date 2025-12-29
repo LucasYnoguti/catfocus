@@ -7,7 +7,7 @@ import io.github.lucasynoguti.core.database.DatabaseInitializer;
 import io.github.lucasynoguti.core.database.dao.SessionDAO;
 import io.github.lucasynoguti.core.pomodoro.PomodoroSettings;
 import io.github.lucasynoguti.core.database.dao.SettingsDAO;
-import io.github.lucasynoguti.ui.pomodoro.AppTheme;
+import io.github.lucasynoguti.ui.theme.AppTheme;
 import io.github.lucasynoguti.ui.MainFrame;
 import io.github.lucasynoguti.core.pomodoro.PomodoroController;
 import io.github.lucasynoguti.util.SoundPlayer;

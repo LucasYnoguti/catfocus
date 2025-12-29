@@ -3,9 +3,9 @@ package io.github.lucasynoguti.ui;
 import io.github.lucasynoguti.core.pomodoro.PomodoroController;
 import io.github.lucasynoguti.core.pomodoro.PomodoroSettings;
 import io.github.lucasynoguti.core.pomodoro.PomodoroState;
-import io.github.lucasynoguti.ui.pomodoro.AppTheme;
+import io.github.lucasynoguti.ui.theme.AppTheme;
 import io.github.lucasynoguti.ui.pomodoro.SettingsDialog;
-import io.github.lucasynoguti.ui.timer.PomodoroPanel;
+import io.github.lucasynoguti.ui.pomodoro.PomodoroPanel;
 
 import javax.swing.*;
 import java.awt.*;

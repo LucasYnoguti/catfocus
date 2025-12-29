@@ -1,4 +1,4 @@
-package io.github.lucasynoguti.ui.pomodoro;
+package io.github.lucasynoguti.ui.theme;
 
 import io.github.lucasynoguti.core.pomodoro.PomodoroPhase;
 
