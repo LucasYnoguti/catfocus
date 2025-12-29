@@ -61,7 +61,6 @@ public class SessionDAO {
     }
 
     public long getTotalFocusTime() {
-        long actualDuration = 0;
         String sql =
                         """
                            SELECT SUM(actual_duration) FROM sessions WHERE phase = 'FOCUS';
@@ -72,6 +71,26 @@ public class SessionDAO {
 
             if (rs.next()) {
                 return rs.getLong(1);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao calcular tempo total de foco", e);
+        }
+        return 0;
+    }
+
+    public int getTotalFocusSessions() {
+        long actualDuration = 0;
+        String sql =
+                """
+                   SELECT COUNT(1) FROM sessions WHERE phase = 'FOCUS' AND completed = 1;
+               """;
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            if (rs.next()) {
+                return rs.getInt(1);
             }
 
         } catch (SQLException e) {
