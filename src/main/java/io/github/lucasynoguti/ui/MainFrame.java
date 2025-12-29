@@ -3,6 +3,7 @@ package io.github.lucasynoguti.ui;
 import io.github.lucasynoguti.core.pomodoro.PomodoroController;
 import io.github.lucasynoguti.core.pomodoro.PomodoroSettings;
 import io.github.lucasynoguti.core.pomodoro.PomodoroState;
+import io.github.lucasynoguti.ui.stats.StatsPanel;
 import io.github.lucasynoguti.ui.theme.AppTheme;
 import io.github.lucasynoguti.ui.pomodoro.SettingsDialog;
 import io.github.lucasynoguti.ui.pomodoro.PomodoroPanel;
@@ -18,6 +19,7 @@ import java.net.URL;
 
 public class MainFrame extends JFrame {
     private final PomodoroPanel pomodoroPanel;
+    private final StatsPanel statsPanel;
     private final RootPanel rootPanel;
     private final PomodoroController controller;
     private final SideBarPanel sideBar;
@@ -30,12 +32,15 @@ public class MainFrame extends JFrame {
 
         rootPanel = new RootPanel();
         pomodoroPanel = new PomodoroPanel();
-        JSlider volumeSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
+        statsPanel = new StatsPanel();
         rootPanel.addScreen(pomodoroPanel, RootPanel.POMODORO);
-
+        rootPanel.addScreen(statsPanel, RootPanel.STATS);
         sideBar = new SideBarPanel(
                 () -> rootPanel.showScreen(RootPanel.POMODORO),
-                () -> rootPanel.showScreen(RootPanel.STATS),
+                () ->{
+                    rootPanel.showScreen(RootPanel.STATS);
+                    statsPanel.update();
+                },
                 () -> rootPanel.showScreen(RootPanel.CATS)
         );
 
