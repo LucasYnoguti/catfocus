@@ -3,6 +3,7 @@ import io.github.lucasynoguti.core.pomodoro.PomodoroPhase;
 import io.github.lucasynoguti.core.pomodoro.PomodoroState;
 import io.github.lucasynoguti.ui.components.AppButton;
 import io.github.lucasynoguti.ui.theme.AppTheme;
+import io.github.lucasynoguti.util.TimeFormatter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,6 +15,8 @@ public class PomodoroPanel extends JPanel {
     private JButton playPauseBtn;
     private JButton resetBtn;
     private JButton settingsBtn;
+    private int lastLabelFontSize = -1;
+    private int lastButtonFontSize = -1;
 
     public PomodoroPanel() {
         setLayout(new BorderLayout());
@@ -59,22 +62,28 @@ public class PomodoroPanel extends JPanel {
     public void updateFontSizes(int containerHeight, int containerWidth) {
         int min = Math.min(containerHeight, containerWidth);
 
-        Font labelFont = AppTheme.MAIN_FONT
-                .deriveFont(Font.PLAIN, min/ 5);
+        int labelFontSize = Math.max(14,min / 5);
+        int buttonFontSize = Math.max(12, min / 12);
 
-        timeLabel.setFont(labelFont);
-        phaseLabel.setFont(labelFont);
+        if (labelFontSize != lastLabelFontSize) {
+            Font labelFont = AppTheme.MAIN_FONT.deriveFont(Font.PLAIN, labelFontSize);
+            timeLabel.setFont(labelFont);
+            phaseLabel.setFont(labelFont);
+            lastLabelFontSize = labelFontSize;
+        }
 
-        Font buttonFont = new Font(
-                "SansSerif",
-                Font.BOLD,
-                (min) / 12
-        );
+        if (buttonFontSize != lastButtonFontSize) {
+            Font buttonFont = new Font("SansSerif", Font.BOLD, buttonFontSize);
+            playPauseBtn.setFont(buttonFont);
+            resetBtn.setFont(buttonFont);
+            settingsBtn.setFont(buttonFont);
+            lastButtonFontSize = buttonFontSize;
+        }
 
-        playPauseBtn.setFont(buttonFont);
-        resetBtn.setFont(buttonFont);
-        settingsBtn.setFont(buttonFont);
+        revalidate();
+        repaint();
     }
+
 
     public void updateButtons(boolean running, PomodoroPhase phase) {
         playPauseBtn.setText(running ? "⏸" : "▶");
@@ -88,15 +97,8 @@ public class PomodoroPanel extends JPanel {
     }
 
     public void renderState(PomodoroState state) {
-        updateTime(formatTime(state.remainingSeconds()));
+        updateTime(TimeFormatter.formatTimeMinSec(state.remainingSeconds()));
         updatePhase(state.phase());
         updateButtons(state.running(), state.phase());
     }
-
-    private String formatTime(int totalSeconds) {
-        int min = totalSeconds / 60;
-        int sec = totalSeconds % 60;
-        return String.format("%02d:%02d", min, sec);
-    }
-
 }
