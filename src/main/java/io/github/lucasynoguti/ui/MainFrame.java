@@ -20,13 +20,26 @@ public class MainFrame extends JFrame {
     private final PomodoroPanel pomodoroPanel;
     private final RootPanel rootPanel;
     private final PomodoroController controller;
+    private final SideBarPanel sideBar;
+    private static final int SIDEBAR_MIN_WIDTH = 400;
 
     public MainFrame(PomodoroController controller) {
         this.controller = controller;
+
         setupWindowProperties();
+
         rootPanel = new RootPanel();
         pomodoroPanel = new PomodoroPanel();
+        JSlider volumeSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
         rootPanel.addScreen(pomodoroPanel, RootPanel.POMODORO);
+
+        sideBar = new SideBarPanel(
+                () -> rootPanel.showScreen(RootPanel.POMODORO),
+                () -> rootPanel.showScreen(RootPanel.STATS),
+                () -> rootPanel.showScreen(RootPanel.CATS)
+        );
+
+        add(sideBar, BorderLayout.WEST);
         add(rootPanel, BorderLayout.CENTER);
         setupEventListeners();
         rootPanel.showScreen(RootPanel.POMODORO);
@@ -62,7 +75,20 @@ public class MainFrame extends JFrame {
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                pomodoroPanel.onResize(getHeight(), getWidth());
+                int frameWidth = getWidth();
+                int frameHeight = getHeight();
+
+                pomodoroPanel.onResize(frameHeight, frameWidth);
+                sideBar.onResize(frameHeight,frameWidth);
+
+                //remove sidebar when window is too small
+                if (frameWidth < SIDEBAR_MIN_WIDTH) {
+                    remove(sideBar);
+                } else {
+                    if (sideBar.getParent() == null) {
+                        add(sideBar, BorderLayout.WEST);
+                    }
+                }
             }
         });
     }

@@ -57,8 +57,10 @@ public class PomodoroPanel extends JPanel {
     }
 
     public void updateFontSizes(int containerHeight, int containerWidth) {
+        int min = Math.min(containerHeight, containerWidth);
+
         Font labelFont = AppTheme.MAIN_FONT
-                .deriveFont(Font.PLAIN, containerHeight/ 5);
+                .deriveFont(Font.PLAIN, min/ 5);
 
         timeLabel.setFont(labelFont);
         phaseLabel.setFont(labelFont);
@@ -66,7 +68,7 @@ public class PomodoroPanel extends JPanel {
         Font buttonFont = new Font(
                 "SansSerif",
                 Font.BOLD,
-                (containerHeight) / 12
+                (min) / 12
         );
 
         playPauseBtn.setFont(buttonFont);
